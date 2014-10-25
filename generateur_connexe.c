@@ -72,7 +72,7 @@ connect* tab = (connect*) malloc(n*sizeof(connect));
 while (cmp!=1){
 	double p = double_rand(0);
 	//double p = 0.2;
-	printf ("p = %f\n\n",p);
+	//printf ("p = %f\n\n",p);
 
  for(int i = 0;i < n;i++)
    for(int j = 0;j < 2;j++)
