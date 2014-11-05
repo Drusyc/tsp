@@ -6,11 +6,12 @@
 #ifndef GENERATEUR_CONNEXE_H_INCLUDED
 #define GENERATEUR_CONNEXE_H_INCLUDED
 
-typedef struct {
+typedef struct{
   int comp;
   int next;
 }connect;
 
-void graphe_connexe(double** couts, double** points, int n);
+double double_rand(int bornes);
+void graphe_connexe(double** couts, double** points, int n, double p);
 
 #endif // GENERATEUR_CONNEXE_H_INCLUDED

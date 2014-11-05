@@ -63,15 +63,14 @@ if(tab[i].next==i && tab[j].next==j)
 
 }
 
-void graphe_connexe(double** couts, double** points, int n)
+void graphe_connexe(double** couts, double** points, int n, double p)
 {
     int cmp = n;
 
 connect* tab = (connect*) malloc(n*sizeof(connect));
 
 while (cmp!=1){
-	double p = double_rand(0);
-	//double p = 0.2;
+
 	//printf ("p = %f\n\n",p);
 
  for(int i = 0;i < n;i++)
