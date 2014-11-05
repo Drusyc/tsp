@@ -107,5 +107,5 @@ for(int i = 0;i < n;i++){
 	}
 
 //affiche_connect(tab,n);
-
+ free(tab);
 }
