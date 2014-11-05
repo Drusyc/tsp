@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include "FloydWarshall.h"
 
-double** FloydWarshall(double** G, int n){
+void floydWarshall(double** G, int n){
 	for (int k=0; k<n; k++){
 		for (int i=0; i<n; i++){
 			for (int j=0; j<n; j++){
@@ -24,5 +24,4 @@ double** FloydWarshall(double** G, int n){
 			}
 		}
 	}
-	return G;
 }

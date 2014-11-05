@@ -1,4 +1,4 @@
 #include <stdio.h>
 #include <stdint.h>
 
-double** floydWarshall(double** G, int n);
+void floydWarshall(double** G, int n);
