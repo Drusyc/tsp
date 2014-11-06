@@ -8,9 +8,14 @@
 #include "generateur_connexe.h" 
 #include "FloydWarshall.h"
 
+/* Tableau stockant les noeuds visités */
 uint32_t *node_seen;
+/* Indice du tableau node_seen */
 uint8_t k;
 
+/*
+ * Fonction renvoyant vrai si un sommet a déjà été visité
+ */
 bool is_seen(uint8_t a, uint8_t n) {
         for (uint8_t i = 0; i < n; i++) {
                 if (a == node_seen[i]) {
@@ -21,6 +26,9 @@ bool is_seen(uint8_t a, uint8_t n) {
 }//is_seen()
 
 
+/*
+ * Fonction renvoyant vrai si tous les noeuds ont été visités
+ */
 bool all_seen (uint8_t n) {
         bool seen;
         for (uint8_t i = 0; i < n; i++) {
