@@ -1,12 +1,15 @@
-#include <stding.h>
+#include <stdint.h>
 #include <stdlib.h>
-#include <stdout.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <time.h>
 #include <math.h>
 
 #include "generateur_connexe.h" 
 #include "FloydWarshall.h"
 
 uint32_t *node_seen;
+uint8_t k;
 
 bool is_seen(uint8_t a, uint8_t n) {
         for (uint8_t i = 0; i < n; i++) {
@@ -36,26 +39,38 @@ bool all_seen (uint8_t n) {
  * Complexité : fact(n)
  *
 */
-void tsp_enum (int ** mat, uint8_t nb_node, uint8_t lastNodeSeen) {
+void tsp_enum (double ** mat, uint8_t nb_node, uint8_t lastNodeSeen) {
         // on parcourt tous les voisins pour chaque noeuds
+        uint8_t tmp;
         for (uint8_t j = 0; j < nb_node; j++) {
-                if (mat[i][j] > 0) /*il existe une arête*/{
+          /*      printf("%i %i\n", lastNodeSeen, j);
+                for (uint8_t i = 0; i<nb_node; i++){
+                        printf("%i", node_seen[i]);
+                }//for
+                printf("\n");*/
+                if (mat[lastNodeSeen][j] > 0) /*il existe une arête*/{
 
                         /*  on revient sur le noeud de départ 
                          *  et on vérifie si tous les noeuds sont parcourues */ 
-                        if (j == node_seen[0] && all_seen(n)) {
+                        if (j == node_seen[0] && all_seen(nb_node)) {
                                 printf("Solution : ");
-                                for (uint8_t i = 0; i <n; i++) {
+                                for (uint8_t i = 0; i <nb_node; i++) {
                                         printf("%i", node_seen[i]);
                                 }//for
-                                printf("\n");
+                                printf("0\n");
                                 return;
-                        } else if (!is_seen(j,n)) {
+                        } else if (!is_seen(j,nb_node)) {
                                 
-                                lastNodeSeen += 1;
-                                node_seen[lastNodeSeen] = j;
+                               
+                                //printf("Node : %i\nj : %i\n\n", lastNodeSeen, j);
+                                tmp = lastNodeSeen; 
+                                lastNodeSeen = j;
+                                k += 1;
+                                node_seen[k] = j;
                                 tsp_enum(mat,nb_node,lastNodeSeen);
-                                lastNodeSeen -= 1;
+                                node_seen[k] = 0;
+                                lastNodeSeen = tmp;
+                                k -= 1;
                         }//fi 
                 }//fi
         }//for
@@ -65,14 +80,13 @@ int main () {
 
         //Graphe généré sous la forme d'un matrice d'adjacence n*n
 
-        uint8_t n = 4;
-
+        uint8_t n = 6;
 
         double ** points = (double **) malloc (n*sizeof(double *));
         double ** couts  = (double **) malloc (n*sizeof(double*)) ;
         node_seen = malloc(n*sizeof(uint32_t));
 
-        double p = double_rand(0);
+        double p = double_rand(1);
 
         for (uint8_t i = 0; i < n; i++) {
                 couts [i] = malloc(n*sizeof(double));
@@ -82,15 +96,16 @@ int main () {
 
         srand(time(NULL));
         graphe_connexe(couts,points,n,p);
-        
-        cout = FloydWarshall (cout,n);
-        
-
+       
+        floydWarshall(couts,n);
         //node_seen contient un tour hamiltonien de taille nb_node 
         //forcement, pour visiter chaque noeuds
         //on part du sommet 1
-        i = 0;
-        tsp_enum(cout, n, 0);
+        k = 0;
+        tsp_enum(couts, n, 0);
 
+        free(points);
+        free(couts);
+        free(node_seen);
         return 0;
 }//main()
