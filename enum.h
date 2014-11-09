@@ -1,6 +1,9 @@
 #include <stdint.h>
 
 
+#ifndef __ENUM_H_
+#define __ENUM_H_ 
+
 /*
  * Fonction renvoyant vrai si un sommet a déjà été visité
  */
@@ -18,3 +21,5 @@ bool all_seen (uint8_t n);
  *
 */
 void tsp_enum (double ** mat, uint8_t nb_node, uint8_t lastNodeSeen) {
+
+#endif /*__ENUM_H_*/

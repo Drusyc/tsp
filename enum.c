@@ -44,7 +44,7 @@ bool all_seen (uint8_t n) {
 /*
  *
  * Enumeration de toutes les solutions possibles d'un graphe G complet.
- * Complexité : fact(n)
+ * Complexité : fact(n-1)
  *
 */
 void tsp_enum (double ** mat, uint8_t nb_node, uint8_t lastNodeSeen) {
@@ -60,7 +60,8 @@ void tsp_enum (double ** mat, uint8_t nb_node, uint8_t lastNodeSeen) {
 
                         /*  on revient sur le noeud de départ 
                          *  et on vérifie si tous les noeuds sont parcourues */ 
-                        if (j == node_seen[0] && all_seen(nb_node)) {
+                        //if (j == node_seen[0] && all_seen(nb_node)) {
+                        if (j == node_seen[0] && k == (nb_node-1)) {
                                 printf("Solution : ");
                                 for (uint8_t i = 0; i <nb_node; i++) {
                                         printf("%i", node_seen[i]);
@@ -88,7 +89,7 @@ int main () {
 
         //Graphe généré sous la forme d'un matrice d'adjacence n*n
 
-        uint8_t n = 6;
+        uint8_t n = 5;
 
         double ** points = (double **) malloc (n*sizeof(double *));
         double ** couts  = (double **) malloc (n*sizeof(double*)) ;
