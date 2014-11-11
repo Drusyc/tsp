@@ -25,7 +25,7 @@ double glouton (double ** G, int * res, int n){
       }
     }
     
-    printf("min %0.2f \n", min);
+    //printf("min %0.2f \n", min);
     c += min;
     res[s] = p;
     s = p;

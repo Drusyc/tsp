@@ -1,0 +1,158 @@
+#include "bb.h"
+
+
+int sub_vide (int * sub, int n)
+{
+  int res = 0;
+  int i=0;
+
+  while(i<n && !res){
+    res|=sub[i];
+    i++;
+      }
+  return !res;
+}
+
+double Prim(int* sub, int n, double** G, int nbr){
+
+
+  /*int nbr = 0;
+  for(int i=0; i<n; i++)
+    
+    if(sub[i]){
+      nbr++;
+      }*/
+
+ 
+  int* nv = malloc(n*sizeof(int));
+  double* cout_min = malloc(n*sizeof(double));
+
+  for(int i=0; i<n;i++){
+    nv[i]=1;
+    cout_min[i] = DBL_MAX;
+  }
+
+  int i=0;
+  double res=0;
+
+  while(sub[i]==0)
+    i++;
+
+ 
+  nv[i]=0;
+  int prec = i;
+  double min;
+  int ind_min;
+  nbr--;
+
+  while(nbr!=0){
+    min =  DBL_MAX;
+    ind_min=-1;
+
+    for (int j=0; j<n; j++){
+      if(nv[j] && sub[j]){ 
+	cout_min[j] = fmin(cout_min[j],G[prec][j]);
+	ind_min = (min>cout_min[j])?j:ind_min;
+	min = (min>cout_min[j])?cout_min[j]:min;
+       }
+    }
+
+    prec=ind_min;
+    res+=min;
+    nv[prec]=0;
+    nbr--;
+  }
+
+  return res;
+}
+
+
+void rec (double* cout_tr, double cout_cour, int* res, int* res_final, int* sub, int n, double ** G, int last, int nbr){
+
+  //if(sub_vide(sub,n)){
+  if(!nbr){
+    cout_cour += G[last][0];
+    
+    if(*cout_tr>cout_cour){
+    *cout_tr = cout_cour;
+    for(int i=0;i<n;i++)
+      res_final[i] = res[i];
+
+    res_final[last] = 0;
+    }
+  }
+    else{
+      
+      double min_a = DBL_MAX;
+      //int min_a_ind = -1;
+
+      for(int j=0; j<n; j++){
+	if(min_a > G[0][j] && sub[j]){
+	  min_a = G[0][j];
+	  //  min_a_ind = j;
+	}
+      }
+      
+      /*  int i = 0;
+      while(i<n && res[i]!=-1){
+	i = res[i];
+	}*/
+
+              
+      double min_b = DBL_MAX;
+ 
+      for(int j=0; j<n; j++){
+	if(min_b > G[last][j] && sub[j]){
+	  min_b = G[last][j];
+	}
+      }
+
+      double min_arbre_couvr = Prim(sub, n,  G, nbr);
+      
+      double lb = min_arbre_couvr + min_a +min_b;
+      
+       if (lb<*cout_tr){
+	 for(int j=0; j<n; j++){
+	   if(sub[j]!=0){
+	     res[last]=j;
+	     sub[j]=0;
+	     
+	     rec (cout_tr, cout_cour+G[last][j], res, res_final, sub, n, G, j, nbr-1);
+	     
+	     
+	     sub[j]=1;
+	     res[last]=-1;
+	 
+	   }
+	 }
+	 }
+
+      
+
+
+    }
+
+
+}
+
+
+double bb (double ** G, int * res, int n){
+
+  int* sub = malloc (n*sizeof(int));
+  int* res_loc = malloc (n*sizeof(int));
+  
+  for(int i=0; i<n; i++){
+    sub [i] = 1;
+    res_loc[i] = -1;
+  }
+  
+sub[0]=0;
+double cout_tr = DBL_MAX;
+
+ rec (&cout_tr, 0, res_loc, res, sub, n, G, 0,n-1);
+
+
+ return cout_tr;
+
+}
+
