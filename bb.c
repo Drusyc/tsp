@@ -79,6 +79,8 @@ double Prim(int* sub, int n, double** G, int nbr){
     nbr--;
   }
 
+  free(nv);
+  free(cout_min);
   return res;
 }
 
@@ -170,6 +172,8 @@ double cout_tr = DBL_MAX;
 
 rec (&cout_tr, 0, res_loc, res, sub, n, G, 0,n-1);
 
+free(sub);
+free(res_loc);
 
 return cout_tr;
 
