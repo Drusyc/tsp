@@ -22,7 +22,7 @@ for(int i = 0;i < n;i++){
 
 void changer_comp(connect* tab, int n,int ind){
   int i = ind+1;
- 
+  n = 0;
   //affiche_connect(tab,n);
   //printf("//// %d %d \n", i,tab[i].comp);
 

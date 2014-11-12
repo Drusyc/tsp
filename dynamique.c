@@ -57,6 +57,8 @@ void free_liste (struct liste_chemin *l, uint8_t n) {
 
 double recur_opti(struct liste_chemin *iter, uint8_t n, double *min, char* choix) {
 	
+        //printf("Dans recur pour %s\n", iter->id);
+
 	if (iter->level == (unsigned)(n-1)) {
 		return iter->next[0]->cout; 
 	}//fi
@@ -79,6 +81,7 @@ void dynamique_recursif (struct liste_chemin *PCC, uint8_t n) {
 
 	/* n-2 étapes |S| = 3,4..n-1 */
 	char * c = malloc (sizeof(char)*5);
+        char * tmp = malloc(sizeof(char)*10);
 	uint8_t nb_child, count_child, last_node;
 	count_child = 0;
 
@@ -95,7 +98,9 @@ void dynamique_recursif (struct liste_chemin *PCC, uint8_t n) {
 	for (uint8_t k = 1; k < n ; k++) {
 		/* Création d'un point qui n'a pas été encore visité */
 		my_itoa(k,c);
-		if (strchr(iter->id,c[0]) == NULL) {
+                strcpy(tmp,c);
+                strcat(tmp,"->");
+		if (strstr(iter->id,tmp) == NULL) {
 			//printf("%i n'est pas dans %s\n", k, iter->id);
 
 			iter_child[++count_child] = malloc(sizeof(struct liste_chemin));
@@ -146,9 +151,9 @@ void dynamique_recursif (struct liste_chemin *PCC, uint8_t n) {
 		//printf("\t\tChemin final : %s avec cout %i \n", iter_child[0]->id, iter_child[0]->cout);
 	}//fi
 	else {
-
 		free(c);
 	}
+        free(tmp);
 }//dynamique_recursif
 
 /*
@@ -217,12 +222,12 @@ void enum_dynamique (uint8_t n) {
 	printf("PCC : %s avec un coût de %f\n", choix_opti,*min);
 
 	for (uint8_t i = 0; i < n; i++) {
-                //free(main_couts [i]);
-                //free(points[i]);
+                free(main_couts [i]);
+                free(points[i]);
         }//for
 
-	//free(main_couts);
-	//free(points);
+	free(main_couts);
+	free(points);
 
 	free(min);
 	free(choix_opti);
