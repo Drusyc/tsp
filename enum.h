@@ -24,4 +24,5 @@ bool all_seen (uint8_t n);
 */
 void tsp_enum (double ** mat, uint8_t nb_node, uint8_t lastNodeSeen);
 
+void enumeration (unsigned n, double ** graph);
 #endif /*__ENUM_H_*/

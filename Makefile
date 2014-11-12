@@ -22,4 +22,4 @@ enum: FloydWarshall.o generateur_connexe.o enum.o
 	$(CC) $(CFLAGS) -o $@ -c $< $(LDFLAGS)
 
 clean:
-	rm -rf *.o 
+	@rm -rf *.o enum.txt

@@ -124,17 +124,17 @@ for(int i = 0;i < n;i++){
 
  
 
- for(int i = 0;i < n;i++){ for(int j = 0;j < n;j++)
+/* for(int i = 0;i < n;i++){ for(int j = 0;j < n;j++)
      printf("%0.3f ", couts[i][j]);
     printf("\n");
   }
-
+*/
 
 
  int i = 0;
 
-    printf("itération %d nombre de composants %d\n\n",i,cmp);
-    /*affiche_connect(tab,n);
+ /*printf("itération %d nombre de composants %d\n\n",i,cmp);
+    affiche_connect(tab,n);
 fflush(stdout);*/
 
  while(cmp!=1){
