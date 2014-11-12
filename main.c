@@ -159,7 +159,7 @@ int main (int argc, char* argv[]){
 
         printf("\n\n--------------- ALGO BRANCH & BOUND (n<13) ---------------\n");
 
-	if (n<15) {
+	if (n<13) {
 		printf("\nCalcul de solution par l'algo de branch & bound.. \n\n");
 
 		my_clock = clock();
@@ -170,7 +170,7 @@ int main (int argc, char* argv[]){
 		affiche1D(res_chemin ,n);
 		printf("Coût : %0.2f \n", res_cout);
 
-		printf("Complexité : ?? ; Temps d'execution : %f secondes\n\n", 
+		printf("Complexité : n^2*c^n ; Temps d'execution : %f secondes\n\n", 
 				((float)my_clock)/CLOCKS_PER_SEC);
 	}//fi
 
