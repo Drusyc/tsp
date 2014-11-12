@@ -25,7 +25,7 @@ void affiche1D(int * m, int n){
 
 int main (){
 
-  int n = 5;
+  int n = 1000;
   double ** points = (double **)malloc( n * sizeof(double*));
   double ** couts = (double **)malloc( n * sizeof(double*));
   int * glouton_res_tab = (int *)malloc(n * sizeof(int));
@@ -43,17 +43,17 @@ int main (){
 
   srand (time(NULL));
   graphe_connexe(couts,points, n, p);
-  affiche2D(couts,n);
+  // affiche2D(couts,n);
 
   printf("\n");
 
   floydWarshall(couts, n);
-  affiche2D(couts,n);
+  //affiche2D(couts,n);
 
    printf("\n");
 
   double glouton_res = glouton(couts, glouton_res_tab, n);
-  affiche1D(glouton_res_tab,n);
+  // affiche1D(glouton_res_tab,n);
 
   printf("glouton_res %0.2f \n", glouton_res);
 
