@@ -168,9 +168,10 @@ void dynamique_recursif (struct liste_chemin *PCC, uint8_t n) {
  *
  * C(S,j) = min C(S\{j},i) + l(i,j)
  */
-void enum_dynamique (uint8_t n) {
+void enum_dynamique (double ** mat_couts, uint8_t n, double *dyn_min) {
 	
         //Graphe généré sous la forme d'un matrice d'adjacence n*n
+        /*
 	double ** points = (double **) malloc (n*sizeof(double *));
 	double ** main_couts  = (double **) malloc (n*sizeof(double*)) ;
 
@@ -193,7 +194,9 @@ void enum_dynamique (uint8_t n) {
 		}//forj
 		printf("\n");
 	}//for
-
+        */
+        
+        couts = mat_couts;
 	struct liste_chemin * PCC = malloc(sizeof (struct liste_chemin));
 	PCC->id = 0;
 	PCC->level = 0;
@@ -227,15 +230,10 @@ void enum_dynamique (uint8_t n) {
 		*min = recur_opti(iter[i], n, min, choix_opti);
 	}//for
 */
-	printf("PCC : %s avec un coût de %f\n", choix_opti,*min);
+	//printf("PCC : %s avec un coût de %f\n", choix_opti,*min);
+	printf("Solution optimale : %s\n", choix_opti);
 
-	for (uint8_t i = 0; i < n; i++) {
-                free(main_couts [i]);
-                free(points[i]);
-        }//for
-
-	free(main_couts);
-	free(points);
+        *dyn_min = *min;
 
 	free(min);
 	free(choix_opti);

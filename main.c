@@ -125,21 +125,64 @@ int main (int argc, char* argv[]){
 
         printf("\nCalcul de solution par l'algo recherche locale en sortant des minimaux locaux.. \n\n");
 
-        res_cout = 0;
         my_clock = clock();
-        sortirMinLocaux(couts, tmp, &res_cout, n);
+//        sortirMinLocaux(couts, tmp, &res_cout, n);
         my_clock = clock() - my_clock;
 
+        printf("Solution : ");
+        affiche1D(tmp ,n);
+        printf("Coût : %0.2f \n", res_cout);
+
+        printf("Complexité : ?? ; Temps d'execution : %f secondes\n\n", 
+                        ((float)my_clock)/CLOCKS_PER_SEC);
 
 
+        printf("\n\n--------------- ALGO PROGRAMMATION DYNAMIQUE ---------------\n");
 
-/*
- *
-  double bb_res = bb(couts, bb_res_tab, n);
-  affiche1D(bb_res_tab,n);
+        printf("\nCalcul de solution par l'algo de programmation dynamique.. \n\n");
 
-  printf("bb_res %0.2f \n", bb_res);
-  */
+        my_clock = clock();
+        enum_dynamique(couts, n, &res_cout);
+        my_clock = clock() - my_clock;
+
+        printf("Coût : %0.2f \n", res_cout);
+
+        printf("Complexité : O(n * 2^n) ; Temps d'execution : %f secondes\n\n", 
+                        ((float)my_clock)/CLOCKS_PER_SEC);
+
+
+        printf("\n\n--------------- ALGO BRANCH & BOUND ---------------\n");
+
+
+        printf("\nCalcul de solution par l'algo de branch & bound.. \n\n");
+
+        my_clock = clock();
+        res_cout = bb(couts, res_chemin, n);
+        my_clock = clock() - my_clock;
+
+        printf("Solution optimale : ");
+        affiche1D(res_chemin ,n);
+        printf("Coût : %0.2f \n", res_cout);
+
+        printf("Complexité : ?? ; Temps d'execution : %f secondes\n\n", 
+                        ((float)my_clock)/CLOCKS_PER_SEC);
+
+
+        printf("\n\n--------------- ALGO D'APPROXIMATION ---------------\n");
+
+
+        printf("\nCalcul de solution par l'algo d'approximation.. \n\n");
+
+        my_clock = clock();
+        my_clock = clock() - my_clock;
+
+        printf("Solution optimale : .. ");
+        printf("Coût : .. \n" );
+
+        printf("Complexité : ?? ; Temps d'execution : %f secondes\n\n", 
+                        ((float)my_clock)/CLOCKS_PER_SEC);
+
+
         for(unsigned i = 0;i < n;i++){
                 free(couts[i]);
                 free(points[i]);
