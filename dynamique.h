@@ -8,9 +8,10 @@ struct liste_chemin;
 
 struct liste_chemin {
 	char * id;
-	uint32_t cout;
+	double cout;
 
 	uint32_t level;
+	uint32_t last_node_seen;
 	struct liste_chemin ** next;
 };
 

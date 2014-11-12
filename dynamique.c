@@ -5,6 +5,7 @@
 #include <time.h>
 #include <math.h>
 #include <string.h>
+#include <float.h> //DBL_MAX..
 
 #include "dynamique.h"
 #include "generateur_connexe.h" 
@@ -13,14 +14,15 @@
 /* Tableau stockant les noeuds visités */
 /* Indice du tableau node_seen */
 
-const uint8_t n = 5;
+double ** couts = NULL;
 
+/*
 double couts[5][5] = 	{{0, 1, 2, 2, 5}, 
 			 {1, 0, 1, 2, 2}, 
 			 {2, 1, 0, 9, 2}, 
-			 {2, 2, 9, 0, 1}, 
-			 {5, 2, 2, 1, 0}};
-/*
+			 {2, 2, 9, 0, 5}, 
+			 {5, 2, 2, 5, 0}};
+
 double couts[4][4] = 	{{0, 1, 2, 5}, 
 			 {1, 0, 1, 2}, 
 			 {2, 1, 0, 3}, 
@@ -53,13 +55,13 @@ void free_liste (struct liste_chemin *l, uint8_t n) {
 	}//fi
 }//free_liste();
 
-uint32_t recur_opti(struct liste_chemin *iter, uint8_t n, uint32_t *min, char* choix) {
+double recur_opti(struct liste_chemin *iter, uint8_t n, double *min, char* choix) {
 	
 	if (iter->level == (unsigned)(n-1)) {
 		return iter->next[0]->cout; 
 	}//fi
 
-	uint32_t tmp;
+	double tmp;
 	for (uint8_t i = 1; i < n - iter->level; i++) {
 		tmp = *min;
 		*min = fmin(recur_opti(iter->next[i],n,min,choix), *min);
@@ -76,7 +78,7 @@ uint32_t recur_opti(struct liste_chemin *iter, uint8_t n, uint32_t *min, char* c
 void dynamique_recursif (struct liste_chemin *PCC, uint8_t n) {
 
 	/* n-2 étapes |S| = 3,4..n-1 */
-	char * c = malloc (sizeof(char)*2);
+	char * c = malloc (sizeof(char)*5);
 	uint8_t nb_child, count_child, last_node;
 	count_child = 0;
 
@@ -98,15 +100,19 @@ void dynamique_recursif (struct liste_chemin *PCC, uint8_t n) {
 
 			iter_child[++count_child] = malloc(sizeof(struct liste_chemin));
 			iter_child[count_child]->level = iter->level + 1;
-			iter_child[count_child]->id = malloc
-				((iter_child[count_child]->level + 1) * sizeof(char));
+			//printf("Previous size id : %i\n", strlen(iter->id));
+			iter_child[count_child]->id = malloc((strlen(iter->id) + 10) * sizeof(char));
 
 			strcpy(iter_child[count_child]->id,iter->id);
 			strcat(iter_child[count_child]->id, c);
+			strcat(iter_child[count_child]->id, "->");
+			//printf("New size id : %i\n", strlen(iter_child[count_child]->id));
 			//printf("\t\tcréation fils : %s",iter_child[count_child]->id);
 
 			//printf("Chemin : %s ", iter_child[count_child]->id);
-			last_node = atoi(&(iter->id[(iter_child[count_child]->level)-2]));
+			//last_node = atoi(&(iter->id[(iter_child[count_child]->level)-2]));
+			last_node = iter->last_node_seen;
+			iter_child[count_child]->last_node_seen = k;
 			iter_child[count_child]->cout = iter->cout 
 						      + couts[last_node][k];
 			//printf(" avec cout : %i \n", iter_child[count_child]->cout);
@@ -128,12 +134,12 @@ void dynamique_recursif (struct liste_chemin *PCC, uint8_t n) {
 		free(c);
 		c = "0";
 		iter_child[0]->level = n;
-		iter_child[0]->id = malloc(iter_child[0]->level + 1 *sizeof(char));
+		iter_child[0]->id = malloc((strlen(iter->id) + 10) *sizeof(char));
 		strcpy(iter_child[0]->id, iter->id);
 		strcat(iter_child[0]->id,c);
 
-		last_node = atoi(&(iter->id[(iter_child[0]->level)-2]));
-		iter_child[0]->cout = iter->cout + couts[last_node][0];
+		last_node = iter->last_node_seen;
+		iter_child[0]->cout = (float) (iter->cout + couts[last_node][0]);
 
 		iter_child[0]->next = NULL;
 
@@ -150,7 +156,32 @@ void dynamique_recursif (struct liste_chemin *PCC, uint8_t n) {
  * C(S,j) = min C(S\{j},i) + l(i,j)
  */
 void enum_dynamique (uint8_t n) {
+	
+        //Graphe généré sous la forme d'un matrice d'adjacence n*n
+	
+	double ** points = (double **) malloc (n*sizeof(double *));
+	double ** main_couts  = (double **) malloc (n*sizeof(double*)) ;
 
+        double p = double_rand(1);
+
+        for (uint8_t i = 0; i < n; i++) {
+                main_couts [i] = malloc(n*sizeof(double));
+                points[i] = malloc(2*sizeof(double));
+        }//for
+
+        srand(time(NULL));
+        graphe_connexe(main_couts,points,n,p);
+       
+        floydWarshall(main_couts,n);
+
+	couts = main_couts;
+        for (uint8_t i = 0; i < n; i++) {
+		for (uint8_t j = 0; j < n; j++) {
+			printf("[%f] ", couts[i][j]);
+		}//forj
+		printf("\n");
+	}//for
+        
 	struct liste_chemin * PCC = malloc(sizeof (struct liste_chemin));
 	PCC->id = 0;
 	PCC->level = 0;
@@ -162,25 +193,36 @@ void enum_dynamique (uint8_t n) {
 	for (uint8_t i = 1; i < n; i++) {
 		iter[i] 	= malloc(sizeof(struct liste_chemin));
 		iter[i]->level 	= 1;
-		iter[i]->id	= malloc((iter[i]->level + 1) * sizeof(char));
+		iter[i]->id	= malloc(250 * sizeof(char));
 		/* id va contenir le chemin actuel */
 		my_itoa(i,iter[i]->id); //iter[i]->id = string(i);
+		strcat(iter[i]->id, "->");
+		iter[i]->last_node_seen = i;
 		iter[i]->cout 	= couts[0][i];
 		iter[i]->next 	= NULL;
 	}//for
+	printf("\n");
 
 	for (uint8_t i = 1; i < n; i++) {
 		dynamique_recursif(iter[i], n);
 	}//For
 
-	uint32_t *min = malloc(sizeof(uint32_t));
-	*min = 1000;
-	char * choix_opti = malloc(sizeof(char) * (n+1)) ;
+	double *min = malloc(sizeof(double));
+	*min = DBL_MAX;
+	char * choix_opti = malloc(sizeof(char) * (3*n)) ;
 	for(uint8_t i = 1; i < n - iter[1]->level; i++) {
 		*min = recur_opti(iter[i], n, min, choix_opti);
 	}//for
 
-	printf("PCC : %s avec un coût de %i\n", choix_opti,*min);
+	printf("PCC : %s avec un coût de %f\n", choix_opti,*min);
+
+	for (uint8_t i = 0; i < n; i++) {
+                //free(main_couts [i]);
+                //free(points[i]);
+        }//for
+
+	//free(main_couts);
+	//free(points);
 
 	free(min);
 	free(choix_opti);
@@ -190,33 +232,7 @@ void enum_dynamique (uint8_t n) {
 
 
 int main () {
-
-        //Graphe généré sous la forme d'un matrice d'adjacence n*n
-
-/*
-        double ** points = (double **) malloc (n*sizeof(double *));
-        double ** couts  = (double **) malloc (n*sizeof(double*)) ;
-        node_seen = malloc(n*sizeof(uint32_t));
-
-        double p = double_rand(1);
-
-        for (uint8_t i = 0; i < n; i++) {
-                couts [i] = malloc(n*sizeof(double));
-                points[i] = malloc(2*sizeof(double));
-                node_seen[i] = 0;
-        }//for
-
-        srand(time(NULL));
-        graphe_connexe(couts,points,n,p);
-       
-        floydWarshall(couts,n);
-*/
-
-
-        //node_seen contient un tour hamiltonien de taille nb_node 
-        //forcement, pour visiter chaque noeuds
-        //on part du sommet 1
-        enum_dynamique(n);
-
+	const uint8_t n = 11;
+	enum_dynamique(n);
         return 0;
 }//main()
