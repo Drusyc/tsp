@@ -25,14 +25,14 @@ void affiche1D(int * m, int n){
 
 int main (){
 
-  int n = 10;
+  int n = 5;
   double ** points = (double **)malloc( n * sizeof(double*));
   double ** couts = (double **)malloc( n * sizeof(double*));
   int * glouton_res_tab = (int *)malloc(n * sizeof(int));
   int * bb_res_tab = (int *)malloc(n * sizeof(int));
 
-  double p = double_rand(0);
-  //double p = 0.2;
+  //double p = double_rand(0);
+  double p = 0.2;
 
   for(int i = 0;i < n;i++){
         couts[i] =  malloc( n * sizeof(double));
@@ -47,7 +47,7 @@ int main (){
 
   printf("\n");
 
-  floydWarshall(couts, n);
+  /* floydWarshall(couts, n);
   affiche2D(couts,n);
 
    printf("\n");
@@ -60,7 +60,7 @@ int main (){
   double bb_res = bb(couts, bb_res_tab, n);
   affiche1D(bb_res_tab,n);
 
-  printf("bb_res %0.2f \n", bb_res);
+  printf("bb_res %0.2f \n", bb_res);*/
 
   return 0;
 
