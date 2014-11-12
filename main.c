@@ -8,6 +8,8 @@
 #include "FloydWarshall.h"
 #include "enum.h"
 #include "glouton.h"
+#include "RechercheLocale.h"
+#include "sortirMinLocaux.h"
 #include "dynamique.h"
 #include "bb.h"
 
@@ -38,7 +40,9 @@ int main (int argc, char* argv[]){
 
         double ** points = (double **)malloc( n * sizeof(double*));
         double ** couts  = (double **)malloc( n * sizeof(double*));
-        int * res    = (int *)malloc( n * sizeof(int));
+        int * res_chemin    = (int *)malloc( n * sizeof(int));
+        int * tmp = (int *)malloc( n * sizeof(int));
+        double res_cout;
 
         clock_t my_clock;
 
@@ -55,7 +59,7 @@ int main (int argc, char* argv[]){
         for(unsigned i = 0;i < n;i++){
                 couts[i] =  malloc( n * sizeof(double));
                 points[i] =  malloc( 2 * sizeof(double));
-                res[i] = -1;
+                res_chemin[i] = -1;
         }//for()
         
         
@@ -87,19 +91,53 @@ int main (int argc, char* argv[]){
         printf("\nCalcul de solution par l'algo glouton.. \n\n");
 
         my_clock = clock();
-        double glouton_res = glouton(couts, res, n);
+        res_cout = glouton(couts, res_chemin, n);
         my_clock = clock() - my_clock;
 
         printf("Solution : ");
-        affiche1D(res ,n);
-        printf("Coût : %0.2f \n", glouton_res);
+        affiche1D(res_chemin ,n);
+        printf("Coût : %0.2f \n", res_cout);
 
         printf("Complexité : O(n²) ; Temps d'execution : %f secondes\n\n", 
                         ((float)my_clock)/CLOCKS_PER_SEC);
-  /*
+        
+        
+        for (unsigned i = 0; i < n; i++) {
+                tmp[i] = res_chemin[i];
+        }//for
 
-  printf("glouton_res %0.2f \n", glouton_res);
 
+        printf("\n\n--------------- ALGO RECHERCHE LOCALE ---------------\n");
+
+        printf("\nCalcul de solution par l'algo recherche locale.. \n\n");
+
+        my_clock = clock();
+        RechercheLocale(couts, res_chemin, &res_cout, n);
+        my_clock = clock() - my_clock;
+
+        printf("Solution : ");
+        affiche1D(res_chemin ,n);
+        printf("Coût : %0.2f \n", res_cout);
+
+        printf("Complexité : ?? ; Temps d'execution : %f secondes\n\n", 
+                        ((float)my_clock)/CLOCKS_PER_SEC);
+
+
+
+        printf("\n\n--------------- ALGO RECHERCHE LOCALE + RECUIT SIMULE ---------------\n");
+
+        printf("\nCalcul de solution par l'algo recherche locale en sortant des minimaux locaux.. \n\n");
+
+        res_cout = 0;
+        my_clock = clock();
+        sortirMinLocaux(couts, tmp, &res_cout, n);
+        my_clock = clock() - my_clock;
+
+
+
+
+/*
+ *
   double bb_res = bb(couts, bb_res_tab, n);
   affiche1D(bb_res_tab,n);
 
@@ -112,7 +150,8 @@ int main (int argc, char* argv[]){
          
         free(couts);
         free(points);
-        free(res);
+        free(tmp);
+        free(res_chemin);
         return 0;
 
 }//main
