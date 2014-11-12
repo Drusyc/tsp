@@ -5,7 +5,7 @@
 #include <math.h>
 
 int g(int it){
-	return it^2;
+	return 1/it;
 }
 
 void sortirMinLocaux(double** G, int* res, double* cout, int n){
@@ -13,7 +13,7 @@ void sortirMinLocaux(double** G, int* res, double* cout, int n){
 	int ameliore = 1;
 	int temp = 0;
 	srand(time(NULL));
-	double p = rand()%1;
+	double p = (double)rand()/(double)(RAND_MAX/1.0);
 	int it=0;
 	while(ameliore){
 		ameliore = 0;
