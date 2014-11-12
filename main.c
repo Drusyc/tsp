@@ -73,7 +73,7 @@ int main (int argc, char* argv[]){
         floydWarshall(couts, n);
         affiche2D(couts,n);
 
-        printf("\n\n--------------- ALGO ENUMERATION ---------------\n");
+	/*        printf("\n\n--------------- ALGO ENUMERATION ---------------\n");
 
         my_clock = clock();
         printf("\nCalcul des solutions possibles données par l'algo d'enumeration.. \n\n");
@@ -150,7 +150,7 @@ int main (int argc, char* argv[]){
         printf("Complexité : O(n * 2^n) ; Temps d'execution : %f secondes\n\n", 
                         ((float)my_clock)/CLOCKS_PER_SEC);
 
-
+	*/
         printf("\n\n--------------- ALGO BRANCH & BOUND ---------------\n");
 
 
@@ -168,7 +168,7 @@ int main (int argc, char* argv[]){
                         ((float)my_clock)/CLOCKS_PER_SEC);
 
 
-        printf("\n\n--------------- ALGO D'APPROXIMATION ---------------\n");
+	/*        printf("\n\n--------------- ALGO D'APPROXIMATION ---------------\n");
 
 
         printf("\nCalcul de solution par l'algo d'approximation.. \n\n");
@@ -187,7 +187,7 @@ int main (int argc, char* argv[]){
                 free(couts[i]);
                 free(points[i]);
         }//for
-         
+	*/     
         free(couts);
         free(points);
         free(tmp);
