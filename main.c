@@ -47,7 +47,7 @@ int main (){
 
   printf("\n");
 
-  /* floydWarshall(couts, n);
+  floydWarshall(couts, n);
   affiche2D(couts,n);
 
    printf("\n");
@@ -57,7 +57,7 @@ int main (){
 
   printf("glouton_res %0.2f \n", glouton_res);
 
-  double bb_res = bb(couts, bb_res_tab, n);
+  /*double bb_res = bb(couts, bb_res_tab, n);
   affiche1D(bb_res_tab,n);
 
   printf("bb_res %0.2f \n", bb_res);*/
