@@ -15,6 +15,8 @@
 /* Indice du tableau node_seen */
 
 double ** couts = NULL;
+double *min;
+char * choix_opti;
 
 /*
 double couts[5][5] = 	{{0, 1, 2, 2, 5}, 
@@ -55,6 +57,7 @@ void free_liste (struct liste_chemin *l, uint8_t n) {
 	}//fi
 }//free_liste();
 
+/*
 double recur_opti(struct liste_chemin *iter, uint8_t n, double *min, char* choix) {
 	
         //printf("Dans recur pour %s\n", iter->id);
@@ -75,7 +78,7 @@ double recur_opti(struct liste_chemin *iter, uint8_t n, double *min, char* choix
 	return *min;
 	
 }//recur_opti()
-
+*/
 
 void dynamique_recursif (struct liste_chemin *PCC, uint8_t n) {
 
@@ -148,6 +151,11 @@ void dynamique_recursif (struct liste_chemin *PCC, uint8_t n) {
 
 		iter_child[0]->next = NULL;
 
+                if (iter_child[0]->cout < *min) {
+                        *min = iter_child[0]->cout;
+                        strcpy(choix_opti,iter_child[0]->id);
+                }//fi
+
 		//printf("\t\tChemin final : %s avec cout %i \n", iter_child[0]->id, iter_child[0]->cout);
 	}//fi
 	else {
@@ -163,7 +171,6 @@ void dynamique_recursif (struct liste_chemin *PCC, uint8_t n) {
 void enum_dynamique (uint8_t n) {
 	
         //Graphe généré sous la forme d'un matrice d'adjacence n*n
-	
 	double ** points = (double **) malloc (n*sizeof(double *));
 	double ** main_couts  = (double **) malloc (n*sizeof(double*)) ;
 
@@ -186,7 +193,7 @@ void enum_dynamique (uint8_t n) {
 		}//forj
 		printf("\n");
 	}//for
-        
+
 	struct liste_chemin * PCC = malloc(sizeof (struct liste_chemin));
 	PCC->id = 0;
 	PCC->level = 0;
@@ -208,17 +215,18 @@ void enum_dynamique (uint8_t n) {
 	}//for
 	printf("\n");
 
+	min = malloc(sizeof(double));
+	*min = DBL_MAX;
+	choix_opti = malloc(sizeof(char) * (3*n)) ;
+
 	for (uint8_t i = 1; i < n; i++) {
 		dynamique_recursif(iter[i], n);
 	}//For
-
-	double *min = malloc(sizeof(double));
-	*min = DBL_MAX;
-	char * choix_opti = malloc(sizeof(char) * (3*n)) ;
+/*
 	for(uint8_t i = 1; i < n - iter[1]->level; i++) {
 		*min = recur_opti(iter[i], n, min, choix_opti);
 	}//for
-
+*/
 	printf("PCC : %s avec un coût de %f\n", choix_opti,*min);
 
 	for (uint8_t i = 0; i < n; i++) {
@@ -235,9 +243,10 @@ void enum_dynamique (uint8_t n) {
 	return;
 }//enum_dynamique()
 
-
+/*
 int main () {
-	const uint8_t n = 11;
+	const uint8_t n = 4;
 	enum_dynamique(n);
         return 0;
 }//main()
+*/

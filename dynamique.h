@@ -15,7 +15,8 @@ struct liste_chemin {
 	struct liste_chemin ** next;
 };
 
-void choix_opti(struct liste_chemin *PCC, uint8_t n);
+//double recur_opti(struct liste_chemin *iter, uint8_t n, double *min, char* choix);
+void my_itoa (uint8_t i, char * c);
 void dynamique_recursif (struct liste_chemin *PCC, uint8_t n);
 void enum_dynamique (uint8_t n);
 

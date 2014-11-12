@@ -8,10 +8,15 @@
 #include "generateur_connexe.h" 
 #include "FloydWarshall.h"
 
+FILE * pFile;
+
 /* Tableau stockant les noeuds visités */
 uint32_t *node_seen;
 /* Indice du tableau node_seen */
 uint8_t k;
+
+/* Nb solutions */
+double nb_solutions = 0;
 
 /*
  * Fonction renvoyant vrai si un sommet a déjà été visité
@@ -62,11 +67,11 @@ void tsp_enum (double ** mat, uint8_t nb_node, uint8_t lastNodeSeen) {
                          *  et on vérifie si tous les noeuds sont parcourues */ 
                         //if (j == node_seen[0] && all_seen(nb_node)) {
                         if (j == node_seen[0] && k == (nb_node-1)) {
-                                printf("Solution : ");
                                 for (uint8_t i = 0; i <nb_node; i++) {
-                                        printf("%i", node_seen[i]);
+                                        fprintf(pFile, "%i", node_seen[i]);
                                 }//for
-                                printf("0\n");
+                                fprintf(pFile, "0\n");
+                                nb_solutions++;
                                 return;
                         } else if (!is_seen(j,nb_node)) {
                                 
@@ -85,6 +90,30 @@ void tsp_enum (double ** mat, uint8_t nb_node, uint8_t lastNodeSeen) {
         }//for
 }//tsp_enum()
 
+void enumeration (unsigned n, double ** graph) {
+        
+        node_seen = malloc(n*sizeof(uint32_t));
+        pFile = fopen("enum.txt", "w");
+
+        if (pFile == NULL) {
+                printf("Impossible de créer le fichier pour écrire les solutions d'enum\n");
+                return;
+        }//fi
+
+        for (uint8_t i = 0; i < n; i++) {
+                node_seen[i] = 0;
+        }//for
+
+        k = 0;
+        tsp_enum(graph, n, 0);
+
+        printf("Solutions écrites dans enum.txt (%7.0f solutions)\n", nb_solutions);
+        fclose(pFile);
+        free(node_seen);
+        return;
+}//enumeration()
+
+/*
 int main () {
 
         //Graphe généré sous la forme d'un matrice d'adjacence n*n
@@ -118,3 +147,4 @@ int main () {
         free(node_seen);
         return 0;
 }//main()
+*/

@@ -3,16 +3,22 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
+
 #include "generateur_connexe.h"
-#include "glouton.h"
-#include "bb.h"
 #include "FloydWarshall.h"
+#include "enum.h"
+#include "glouton.h"
+#include "RechercheLocale.h"
+#include "sortirMinLocaux.h"
+#include "dynamique.h"
+#include "bb.h"
 
 void affiche2D(double ** m, int n){
-  for(int i = 0;i < n;i++){ for(int j = 0;j < n;j++)
-     printf("%0.3f ", m[i][j]);
-    printf("\n");
-  }
+        for(int i = 0;i < n;i++){ 
+                for(int j = 0;j < n;j++)
+                        printf("[%0.3f] \t ", m[i][j]);
+                printf("\n");
+        }//for
 }
 
 void affiche1D(int * m, int n){
@@ -23,46 +29,127 @@ void affiche1D(int * m, int n){
   
 }
 
-int main (){
+int main (int argc, char* argv[]){
 
-  int n = 1000;
-  double ** points = (double **)malloc( n * sizeof(double*));
-  double ** couts = (double **)malloc( n * sizeof(double*));
-  int * glouton_res_tab = (int *)malloc(n * sizeof(int));
-  int * bb_res_tab = (int *)malloc(n * sizeof(int));
+        if (argc != 2) {
+                printf("Entrer une valeur de n\n");
+                return -1;
+        }//fi
 
-  //double p = double_rand(0);
-  double p = 0.2;
 
-  for(int i = 0;i < n;i++){
-        couts[i] =  malloc( n * sizeof(double));
-        points[i] =  malloc( 2 * sizeof(double));
-	glouton_res_tab[i] = -1;
-	bb_res_tab[i] = -1;
-  }
+        unsigned n = atoi(argv[1]);
 
-  srand (time(NULL));
-  graphe_connexe(couts,points, n, p);
-  // affiche2D(couts,n);
+        double ** points = (double **)malloc( n * sizeof(double*));
+        double ** couts  = (double **)malloc( n * sizeof(double*));
+        int * res_chemin    = (int *)malloc( n * sizeof(int));
+        int * tmp = (int *)malloc( n * sizeof(int));
+        double res_cout;
 
-  printf("\n");
+        clock_t my_clock;
 
-  floydWarshall(couts, n);
-  //affiche2D(couts,n);
 
-   printf("\n");
 
-  double glouton_res = glouton(couts, glouton_res_tab, n);
-  // affiche1D(glouton_res_tab,n);
+        printf("\n\n--------------- GENERATION ARBRE CONNEXE ---------------");
+        //double p = double_rand(0);
+        double p = 0.2;
 
-  printf("glouton_res %0.2f \n", glouton_res);
+        for(unsigned i = 0;i < n;i++){
+                couts[i] =  malloc( n * sizeof(double));
+                points[i] =  malloc( 2 * sizeof(double));
+                res_chemin[i] = -1;
+        }//for()
+        
+        
+        srand (time(NULL));
+        graphe_connexe(couts,points, n, p);
 
-  /*double bb_res = bb(couts, bb_res_tab, n);
+        printf("\n\nGraphe généré (avant floydWarshall) pour n = %i et p = %f\n\n", n, p);
+
+
+
+        printf("\n\n--------------- GENERATION ARBRE COMPLET ---------------");
+
+        printf("\n\nGraphe après floydWarshall :\n\n");
+        floydWarshall(couts, n);
+        affiche2D(couts,n);
+
+        printf("\n\n--------------- ALGO ENUMERATION ---------------\n");
+
+        my_clock = clock();
+        printf("\nCalcul des solutions possibles données par l'algo d'enumeration.. \n\n");
+        enumeration(n, couts);
+        my_clock = clock() - my_clock;
+
+        printf("Complexité : O(n!) ; Temps d'execution : %f secondes\n\n", 
+                        ((float)my_clock)/CLOCKS_PER_SEC);
+
+        printf("\n\n--------------- ALGO GLOUTON ---------------\n");
+
+        printf("\nCalcul de solution par l'algo glouton.. \n\n");
+
+        my_clock = clock();
+        res_cout = glouton(couts, res_chemin, n);
+        my_clock = clock() - my_clock;
+
+        printf("Solution : ");
+        affiche1D(res_chemin ,n);
+        printf("Coût : %0.2f \n", res_cout);
+
+        printf("Complexité : O(n²) ; Temps d'execution : %f secondes\n\n", 
+                        ((float)my_clock)/CLOCKS_PER_SEC);
+        
+        
+        for (unsigned i = 0; i < n; i++) {
+                tmp[i] = res_chemin[i];
+        }//for
+
+
+        printf("\n\n--------------- ALGO RECHERCHE LOCALE ---------------\n");
+
+        printf("\nCalcul de solution par l'algo recherche locale.. \n\n");
+
+        my_clock = clock();
+        RechercheLocale(couts, res_chemin, &res_cout, n);
+        my_clock = clock() - my_clock;
+
+        printf("Solution : ");
+        affiche1D(res_chemin ,n);
+        printf("Coût : %0.2f \n", res_cout);
+
+        printf("Complexité : ?? ; Temps d'execution : %f secondes\n\n", 
+                        ((float)my_clock)/CLOCKS_PER_SEC);
+
+
+
+        printf("\n\n--------------- ALGO RECHERCHE LOCALE + RECUIT SIMULE ---------------\n");
+
+        printf("\nCalcul de solution par l'algo recherche locale en sortant des minimaux locaux.. \n\n");
+
+        res_cout = 0;
+        my_clock = clock();
+        sortirMinLocaux(couts, tmp, &res_cout, n);
+        my_clock = clock() - my_clock;
+
+
+
+
+/*
+ *
+  double bb_res = bb(couts, bb_res_tab, n);
   affiche1D(bb_res_tab,n);
 
-  printf("bb_res %0.2f \n", bb_res);*/
+  printf("bb_res %0.2f \n", bb_res);
+  */
+        for(unsigned i = 0;i < n;i++){
+                free(couts[i]);
+                free(points[i]);
+        }//for
+         
+        free(couts);
+        free(points);
+        free(tmp);
+        free(res_chemin);
+        return 0;
 
-  return 0;
-
-}
+}//main
 
