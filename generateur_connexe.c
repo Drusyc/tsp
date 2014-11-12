@@ -20,9 +20,8 @@ for(int i = 0;i < n;i++){
 }
 
 
-void changer_comp(connect* tab, int n,int ind){
+void changer_comp(connect* tab, int ind){
   int i = ind+1;
-  n = 0;
   //affiche_connect(tab,n);
   //printf("//// %d %d \n", i,tab[i].comp);
 
@@ -142,7 +141,7 @@ fflush(stdout);*/
    while(i<n-1){
      if(tab[i].comp!=tab[i+1].comp){
        //  printf("ololo %d %d ; %d %d ****\n",i,tab[i].comp,i+1, tab[i+1].comp);
-       changer_comp(tab, n, i);
+       changer_comp(tab,i);
        couts[i][i+1] = sqrt(pow(points[i+1][2]-points[i+1][2],2)+pow(points[i+1][1]-points[i][1],2));
      couts[i+1][i] = couts[i][i+1];
 
