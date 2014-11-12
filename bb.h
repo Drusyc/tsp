@@ -1,3 +1,8 @@
+
+#ifndef __BB_H__
+#define __BB_H__
+
+
 #include <float.h>
 #include <stdio.h>
 #include <stdint.h>
@@ -16,3 +21,6 @@ res - le chemin qu'on construit
 n - taille de graphe
 */
 double bb (double ** G, int * res, int n);
+
+
+#endif //__BB_H__

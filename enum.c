@@ -85,6 +85,7 @@ void tsp_enum (double ** mat, uint8_t nb_node, uint8_t lastNodeSeen) {
         }//for
 }//tsp_enum()
 
+/*
 int main () {
 
         //Graphe généré sous la forme d'un matrice d'adjacence n*n
@@ -118,3 +119,4 @@ int main () {
         free(node_seen);
         return 0;
 }//main()
+*/

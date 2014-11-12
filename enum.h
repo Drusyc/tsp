@@ -1,8 +1,10 @@
-#include <stdint.h>
-
-
 #ifndef __ENUM_H_
 #define __ENUM_H_ 
+
+#include <stdint.h>
+#include <stdbool.h>
+
+
 
 /*
  * Fonction renvoyant vrai si un sommet a déjà été visité
@@ -20,6 +22,6 @@ bool all_seen (uint8_t n);
  * Complexité : fact(n)
  *
 */
-void tsp_enum (double ** mat, uint8_t nb_node, uint8_t lastNodeSeen) {
+void tsp_enum (double ** mat, uint8_t nb_node, uint8_t lastNodeSeen);
 
 #endif /*__ENUM_H_*/
