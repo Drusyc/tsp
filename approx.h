@@ -11,5 +11,9 @@ struct arc {
 
 
 
+void algo_approx (int n);
+
+
+
 #endif //__APPROX_H__
 

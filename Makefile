@@ -13,6 +13,9 @@ all: $(EXEC)
 tsp: $(OBJ)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
+approx: approx.o FloydWarshall.o generateur_connexe.o
+	$(CC) -o $@ $^ $(LDFLAGS)
+
 test: FloydWarshall.o generateur_connexe.o dynamique.o enum.o glouton.o bb.o gen_graph.o 
 	$(CC) -o $@ $^ $(LDFLAGS)
 

@@ -12,6 +12,7 @@
 #include "sortirMinLocaux.h"
 #include "dynamique.h"
 #include "bb.h"
+#include "approx.h"
 
 void affiche2D(double ** m, int n){
         for(int i = 0;i < n;i++){ 
@@ -44,6 +45,7 @@ void affiche1D2(int * m){
 
 int main (int argc, char* argv[]){
 
+
         if (argc != 2) {
                 printf("Entrer une valeur de n\n");
                 return -1;
@@ -59,8 +61,6 @@ int main (int argc, char* argv[]){
         double res_cout;
 
         clock_t my_clock;
-
-
 
         printf("\n\n--------------- GENERATION ARBRE CONNEXE ---------------");
         //double p = double_rand(0);
