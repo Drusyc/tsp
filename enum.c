@@ -105,9 +105,10 @@ void enumeration (unsigned n, double ** graph) {
         }//for
 
         k = 0;
+	nb_solutions = 0;
         tsp_enum(graph, n, 0);
 
-        printf("Solutions écrites dans enum.txt (%7.0f solutions)\n", nb_solutions);
+        //printf("Solutions écrites dans enum.txt (%7.0f solutions)\n", nb_solutions);
         fclose(pFile);
         free(node_seen);
         return;
