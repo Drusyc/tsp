@@ -136,7 +136,7 @@ void set_abr_pmin (struct arc * aretes, unsigned size_arc,  double ** mat, int n
 	//	while(k!=(n))
 	  // for(unsigned i = 0; i < size_arc; i++) {
 	  while(i<size_arc && k!=n){
-	  printf("**%d\n", k);
+	    // printf("**%d\n", k);
                 is_p1 = is_seen(node_seen,aretes[i].p1,n);
                 is_p2 = is_seen(node_seen,aretes[i].p2,n);
                 if ((!is_p1 || !is_p2) &&(!(!is_p1 && !is_p2) || k==0)) {
