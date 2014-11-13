@@ -2,33 +2,7 @@
 #include <stdlib.h>
 #include "RechercheLocale.h"
 
-void transform(int * m, int n){
-  int* t = malloc(n*sizeof(int));
-  for(int i = 0;i < n;i++) 
-    t[i] = m[i];
-
-  int j = 0;
-
-  for(int i = 0;i < n;i++){
-    m[i] = j;
-    j = t[j];
-  }
- 
- 
-  free(t);
-}
-
-void affiche1Dtest(int * m, int n){
-  for(int i = 0;i < n;i++) 
-     printf("%d ", m[i]);
-  
-  printf("\n");
-  
-}
-
 void RechercheLocale(double** G, int* res, double* cout, int n){
-   
-
         transform(res,n);
 	int ameliore = 1;
 	int temp = 0;
@@ -92,6 +66,7 @@ void RechercheLocale(double** G, int* res, double* cout, int n){
 	cout[0] = 0;
 	for(int k=0; k<(n-1); ++k){
 		cout[0] = cout[0] + G[res[k]][res[k+1]];
+	printf("%lf\n",cout[0]);
 	}
 	//On "ferme" le cycle
 	cout[0] = cout[0] + G[res[n-1]][res[0]];
