@@ -28,11 +28,8 @@ void affiche1Dtest(int * m, int n){
 
 void RechercheLocale(double** G, int* res, double* cout, int n){
    
-  affiche1Dtest(res ,n);
-        transform(res,n);
-  affiche1Dtest(res,n);
 
-	
+        transform(res,n);
 	int ameliore = 1;
 	int temp = 0;
 
