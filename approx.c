@@ -40,20 +40,16 @@ void sort(struct arc * ar, int l, int h){
                 while (ar[i].cout < m.cout) i++;     
                 while (ar[j].cout > m.cout) j--;     
                         if (i<=j){
-                                  wsp=ar[i];
-                                  ar[i]=ar[j];
-                                  ar[j]=wsp;
-                                  i++;
-                                  j--;
+                                wsp=ar[i];
+                                ar[i]=ar[j];
+                                ar[j]=wsp;
+                                i++;
+                                j--;
                         }//fi
-
         } while (i <= j);
 
-        if (i<h)
-                sort(ar, i, h);
-        if (l<j)
-                sort(ar, l, j);
-        
+        if (i<h) sort(ar, i, h);
+        if (l<j) sort(ar, l, j);
 }//sort
  
 void my_qsort(struct arc* ar, int n){
@@ -294,9 +290,10 @@ void algo_approx (int n) {
         crea_hamil (aretes, nb_arc, res, n);
 
         printf("\n\n");
-        for(int i = 0; i < n; i++) {
+        for(int i = 0; i < (n-1); i++) {
                 printf("%i->",res[i]);
         }//for()
+        printf("0\n");
 
         /************ FREE ************/
         for(int i = 0;i < n;i++){

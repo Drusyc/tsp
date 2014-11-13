@@ -16,7 +16,7 @@ tsp: $(OBJ)
 approx: approx.o FloydWarshall.o generateur_connexe.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-test: FloydWarshall.o generateur_connexe.o dynamique.o enum.o glouton.o bb.o gen_graph.o 
+test: FloydWarshall.o generateur_connexe.o dynamique.o enum.o glouton.o bb.o gen_graph.o RechercheLocale.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
 dynamique: FloydWarshall.o generateur_connexe.o dynamique.o
