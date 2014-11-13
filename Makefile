@@ -12,6 +12,9 @@ all: $(EXEC)
 tsp: $(OBJ)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
+gen_graph: FloydWarshall.o generateur_connexe.o dynamique.o enum.o glouton.o bb.o gen_graph.o 
+	$(CC) -o $@ $^ $(LDFLAGS)
+
 dynamique: FloydWarshall.o generateur_connexe.o dynamique.o
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) 
 
