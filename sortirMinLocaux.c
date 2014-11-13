@@ -8,8 +8,25 @@ int g(int it){
 	return 1/it;
 }
 
+void transform1(int * m, int n){
+  int* t = malloc(n*sizeof(int));
+  for(int i = 0;i < n;i++) 
+    t[i] = m[i];
+
+  int j = 0;
+
+  for(int i = 0;i < n;i++){
+    m[i] = j;
+    j = t[j];
+  }
+ 
+ 
+  free(t);
+}
+
 void sortirMinLocaux(double** G, int* res, double* cout, int n){
 
+        transform1(res,n);
 	int ameliore = 1;
 	int temp = 0;
 	srand(time(NULL));
