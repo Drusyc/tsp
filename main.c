@@ -29,6 +29,16 @@ void affiche1D(int * m, int n){
   
 }
 
+void affiche1D2(int * m, int n){
+  for(int i = 0;i < n;i++) 
+     printf("%d ", m[i]);
+  
+  printf("\n");
+  
+}
+
+
+
 int main (int argc, char* argv[]){
 
         if (argc != 2) {
@@ -102,12 +112,13 @@ int main (int argc, char* argv[]){
                         ((float)my_clock)/CLOCKS_PER_SEC);
         
         
+
         for (unsigned i = 0; i < n; i++) {
                 tmp[i] = res_chemin[i];
         }//for
 
 
-        printf("\n\n--------------- ALGO RECHERCHE LOCALE ---------------\n");
+	        printf("\n\n--------------- ALGO RECHERCHE LOCALE ---------------\n");
 
         printf("\nCalcul de solution par l'algo recherche locale.. \n\n");
 
@@ -173,7 +184,7 @@ int main (int argc, char* argv[]){
 		printf("Complexité : n^2*c^n ; Temps d'execution : %f secondes\n\n", 
 				((float)my_clock)/CLOCKS_PER_SEC);
 	}//fi
-
+	
 	/*        printf("\n\n--------------- ALGO D'APPROXIMATION ---------------\n");
 
 
