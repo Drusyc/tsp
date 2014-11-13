@@ -1,6 +1,5 @@
 #include "bb.h"
 
-
 /*vérifie si l'ensemble V\S est vide ou pas*/
 /*
 int sub_vide (int * sub, int n)
@@ -117,7 +116,6 @@ void rec (double* cout_tr, double cout_cour, int* res, int* res_final, int* sub,
       
       double min_a = DBL_MAX; /*distance min de a à V\S*/
    
-
       for(int j=0; j<n; j++){
 	if(min_a > G[0][j] && sub[j]){
 	  min_a = G[0][j];
@@ -125,7 +123,7 @@ void rec (double* cout_tr, double cout_cour, int* res, int* res_final, int* sub,
       }
               
       double min_b = DBL_MAX; /*distance min de b à V\S*/
- 
+
       for(int j=0; j<n; j++){
 	if(min_b > G[last][j] && sub[j]){
 	  min_b = G[last][j];
@@ -138,6 +136,7 @@ void rec (double* cout_tr, double cout_cour, int* res, int* res_final, int* sub,
       double lb = min_arbre_couvr + min_a +min_b;
       
       if (lb<*cout_tr){ /*on va développer l'arbre si c'est possible d'améliorer la solution locale courante*/
+	
 	 for(int j=0; j<n; j++){
 	   if(sub[j] != 0){/*pour tous les x dans V\S*/
 	     res[last] = j;/*on rajoute x dans S*/
