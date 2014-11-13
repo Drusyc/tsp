@@ -11,11 +11,17 @@
 
 const int n = 5;
 
-double couts[5][5] = 	{{0, 1, 2, 2, 5}, 
+/*double couts[5][5] = 	{{0, 1, 2, 2, 5}, 
 			 {1, 0, 1, 2, 2}, 
 			 {2, 1, 0, 9, 2}, 
 			 {2, 2, 9, 0, 5}, 
-			 {5, 2, 2, 5, 0}};
+			 {5, 2, 2, 5, 0}};*/
+
+double couts[5][5] = 	{{0,1, 4, 5,1 }, 
+			 {1, 0,1 ,5 ,4 }, 
+			 {4,1 , 0,2 ,8 }, 
+			 {5, 5, 2, 0,1 }, 
+			 {1, 4, 8, 1, 0}};
 /*
 double couts[4][4] = 	{{0, 1, 2, 5}, 
 			 {1, 0, 1, 2}, 
@@ -123,10 +129,17 @@ void set_abr_pmin (struct arc * aretes, unsigned size_arc,  double ** mat, int n
 
         bool is_p1, is_p2;
         int k = 0;
-        for(unsigned i = 0; i < size_arc; i++) {
+	
+	unsigned i=0;
+
+	
+	//	while(k!=(n))
+	  // for(unsigned i = 0; i < size_arc; i++) {
+	  while(i<size_arc && k!=n){
+	  printf("**%d\n", k);
                 is_p1 = is_seen(node_seen,aretes[i].p1,n);
                 is_p2 = is_seen(node_seen,aretes[i].p2,n);
-                if (!is_p1 || !is_p2) {
+                if ((!is_p1 || !is_p2) &&(!(!is_p1 && !is_p2) || k==0)) {
                         if (!is_p1) {
                                 node_seen[k++] = aretes[i].p1;
                         }//fi
@@ -136,7 +149,9 @@ void set_abr_pmin (struct arc * aretes, unsigned size_arc,  double ** mat, int n
 
                         mat[aretes[i].p1][aretes[i].p2] = 2;
                         mat[aretes[i].p2][aretes[i].p1] = 2;
+			i=0;    
                 }//fi
+		i++;	
         }//for
 }//set_abr_pmin()
 
