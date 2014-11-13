@@ -130,7 +130,7 @@ int main (int argc, char* argv[]){
         affiche1D(res_chemin ,n);
         printf("Coût : %0.2f \n", res_cout);
 
-        printf("Complexité : ?? ; Temps d'execution : %f secondes\n\n", 
+        printf("Complexité (en moyenne):O(n²) ; Temps d'execution : %f secondes\n\n", 
                         ((float)my_clock)/CLOCKS_PER_SEC);
 
 
@@ -147,7 +147,7 @@ int main (int argc, char* argv[]){
         affiche1D(tmp ,n);
         printf("Coût : %0.2f \n", res_cout);
 
-        printf("Complexité : ?? ; Temps d'execution : %f secondes\n\n", 
+        printf("Complexité (en moyenne): O(n²) ; Temps d'execution : %f secondes\n\n", 
                         ((float)my_clock)/CLOCKS_PER_SEC);
 
 
