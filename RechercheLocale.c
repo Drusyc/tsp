@@ -82,7 +82,7 @@ void RechercheLocale(double** G, int* res, double* cout, int n){
 	cout[0] = 0;
 	for(int k=0; k<(n-1); ++k){
 		cout[0] = cout[0] + G[res[k]][res[k+1]];
-	printf("%lf\n",cout[0]);
+		printf("%d %lf\n",k, cout[0]);
 	}
 	//On "ferme" le cycle
 	cout[0] = cout[0] + G[res[n-1]][res[0]];
