@@ -2,6 +2,22 @@
 #include <stdlib.h>
 #include "RechercheLocale.h"
 
+void transform(int * m, int n){
+  int* t = malloc(n*sizeof(int));
+  for(int i = 0;i < n;i++)
+    t[i] = m[i];
+
+  int j = 0;
+
+  for(int i = 0;i < n;i++){
+    m[i] = j;
+    j = t[j];
+  }
+
+
+  free(t);
+}
+
 void RechercheLocale(double** G, int* res, double* cout, int n){
         transform(res,n);
 	int ameliore = 1;
