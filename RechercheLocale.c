@@ -3,7 +3,7 @@
 #include "RechercheLocale.h"
 
 void RechercheLocale(double** G, int* res, double* cout, int n){
-
+        transform(res,n);
 	int ameliore = 1;
 	int temp = 0;
 
