@@ -63,7 +63,7 @@ double Prim(int* sub, int n, double** G, int nbr){
  
     for (int j=0; j<n; j++){ /*parcours de tous les sommets*/
       if(nv[j] && sub[j]){ /*si non-visité et dans V\S*/
-	cout_min[j] = fmin(cout_min[j],G[prec][j]);/*on met à jour le cout min comme il y a le sommet prec qui est passé en visité*/
+	cout_min[j] = fmin(cout_min[j],G[prec][j]);/*on met à jour le cout min comme il y a le sommet prec qui vient de passer en visité*/
 	
 	if(min>cout_min[j]){
 	ind_min = j;/*sommet qui va passer en visité*/

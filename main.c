@@ -22,12 +22,25 @@ void affiche2D(double ** m, int n){
 }
 
 void affiche1D(int * m, int n){
-  for(int i = 0;i < n;i++) 
-     printf("%d ", m[i]);
+  for(int i = 0;i < n-1;i++) 
+     printf("%d->", m[i]);
   
-  printf("\n");
+  printf("%d \n", m[n-1]);
   
 }
+
+void affiche1D2(int * m){
+  
+  int i = 0; 
+  while(m[i]!=0){
+    printf("%d->", i);
+    i = m[i];
+  }
+  printf("%d \n", i);
+  
+}
+
+
 
 int main (int argc, char* argv[]){
 
@@ -35,6 +48,7 @@ int main (int argc, char* argv[]){
                 printf("Entrer une valeur de n\n");
                 return -1;
         }//fi
+
 
         unsigned n = atoi(argv[1]);
 
@@ -46,10 +60,6 @@ int main (int argc, char* argv[]){
 
         clock_t my_clock;
 
-/*
-  int * glouton_res_tab = (int *)malloc(n * sizeof(int));
-  int * bb_res_tab = (int *)malloc(n * sizeof(int));
-*/
 
 
         printf("\n\n--------------- GENERATION ARBRE CONNEXE ---------------");
@@ -68,7 +78,7 @@ int main (int argc, char* argv[]){
 
         printf("\n\nGraphe généré (avant floydWarshall) pour n = %i et p = %f\n\n", n, p);
 
-        affiche2D(couts,n);
+
 
         printf("\n\n--------------- GENERATION ARBRE COMPLET ---------------");
 
@@ -76,15 +86,18 @@ int main (int argc, char* argv[]){
         floydWarshall(couts, n);
         affiche2D(couts,n);
 
-        printf("\n\n--------------- ALGO ENUMERATION ---------------\n");
 
-        my_clock = clock();
-        printf("\nCalcul des solutions possibles données par l'algo d'enumeration.. \n\n");
-        enumeration(n, couts);
-        my_clock = clock() - my_clock;
+        printf("\n\n--------------- ALGO ENUMERATION (n<11) ---------------\n");
 
-        printf("Complexité : O(n!) ; Temps d'execution : %f secondes\n\n", 
-                        ((float)my_clock)/CLOCKS_PER_SEC);
+	if (n<11) {
+		my_clock = clock();
+		printf("\nCalcul des solutions possibles données par l'algo d'enumeration.. \n\n");
+		enumeration(n, couts);
+		my_clock = clock() - my_clock;
+
+		printf("Complexité : O(n!) ; Temps d'execution : %f secondes\n\n", 
+				((float)my_clock)/CLOCKS_PER_SEC);
+	}//fi
 
         printf("\n\n--------------- ALGO GLOUTON ---------------\n");
 
@@ -95,19 +108,20 @@ int main (int argc, char* argv[]){
         my_clock = clock() - my_clock;
 
         printf("Solution : ");
-        affiche1D(res_chemin ,n);
+        affiche1D2(res_chemin);
         printf("Coût : %0.2f \n", res_cout);
 
         printf("Complexité : O(n²) ; Temps d'execution : %f secondes\n\n", 
                         ((float)my_clock)/CLOCKS_PER_SEC);
         
         
+
         for (unsigned i = 0; i < n; i++) {
                 tmp[i] = res_chemin[i];
         }//for
 
 
-        printf("\n\n--------------- ALGO RECHERCHE LOCALE ---------------\n");
+	        printf("\n\n--------------- ALGO RECHERCHE LOCALE ---------------\n");
 
         printf("\nCalcul de solution par l'algo recherche locale.. \n\n");
 
@@ -119,7 +133,7 @@ int main (int argc, char* argv[]){
         affiche1D(res_chemin ,n);
         printf("Coût : %0.2f \n", res_cout);
 
-        printf("Complexité : ?? ; Temps d'execution : %f secondes\n\n", 
+        printf("Complexité (en moyenne):O(n²) ; Temps d'execution : %f secondes\n\n", 
                         ((float)my_clock)/CLOCKS_PER_SEC);
 
 
@@ -129,49 +143,54 @@ int main (int argc, char* argv[]){
         printf("\nCalcul de solution par l'algo recherche locale en sortant des minimaux locaux.. \n\n");
 
         my_clock = clock();
-//        sortirMinLocaux(couts, tmp, &res_cout, n);
+	sortirMinLocaux(couts, tmp, &res_cout, n);
         my_clock = clock() - my_clock;
 
         printf("Solution : ");
         affiche1D(tmp ,n);
         printf("Coût : %0.2f \n", res_cout);
 
-        printf("Complexité : ?? ; Temps d'execution : %f secondes\n\n", 
+        printf("Complexité (en moyenne): O(n²) ; Temps d'execution : %f secondes\n\n", 
                         ((float)my_clock)/CLOCKS_PER_SEC);
 
 
-        printf("\n\n--------------- ALGO PROGRAMMATION DYNAMIQUE ---------------\n");
+        printf("\n\n--------------- ALGO PROGRAMMATION DYNAMIQUE (n<12) ---------------\n");
 
-        printf("\nCalcul de solution par l'algo de programmation dynamique.. \n\n");
+	if (n<12) {
+		printf("\nCalcul de solution par l'algo de programmation dynamique.. \n\n");
 
-        my_clock = clock();
-        enum_dynamique(couts, n, &res_cout);
-        my_clock = clock() - my_clock;
+		my_clock = clock();
+		enum_dynamique(couts, n, &res_cout);
+		my_clock = clock() - my_clock;
 
-        printf("Coût : %0.2f \n", res_cout);
+		printf("Coût : %0.2f \n", res_cout);
 
-        printf("Complexité : O(n * 2^n) ; Temps d'execution : %f secondes\n\n", 
-                        ((float)my_clock)/CLOCKS_PER_SEC);
-
-
-        printf("\n\n--------------- ALGO BRANCH & BOUND ---------------\n");
+		printf("Complexité : O(n * 2^n) ; Temps d'execution : %f secondes\n\n", 
+				((float)my_clock)/CLOCKS_PER_SEC);
 
 
-        printf("\nCalcul de solution par l'algo de branch & bound.. \n\n");
+	}//fi
 
-        my_clock = clock();
-        res_cout = bb(couts, res_chemin, n);
-        my_clock = clock() - my_clock;
+        printf("\n\n--------------- ALGO BRANCH & BOUND (n<14) ---------------\n");
 
-        printf("Solution optimale : ");
-        affiche1D(res_chemin ,n);
-        printf("Coût : %0.2f \n", res_cout);
+	if (n<14) {
+		printf("\nCalcul de solution par l'algo de branch & bound.. \n\n");
+		 for(unsigned i = 0;i < n;i++)
+		   res_chemin[i] = -1;
+	
+		my_clock = clock();
+		res_cout = bb(couts, res_chemin, n);
+		my_clock = clock() - my_clock;
 
-        printf("Complexité : ?? ; Temps d'execution : %f secondes\n\n", 
-                        ((float)my_clock)/CLOCKS_PER_SEC);
+		printf("Solution optimale : ");
+		affiche1D2(res_chemin);
+		printf("Coût : %0.2f \n", res_cout);
 
-
-        printf("\n\n--------------- ALGO D'APPROXIMATION ---------------\n");
+		printf("Complexité : n^2*c^n ; Temps d'execution : %f secondes\n\n", 
+				((float)my_clock)/CLOCKS_PER_SEC);
+	}//fi
+	
+	/*        printf("\n\n--------------- ALGO D'APPROXIMATION ---------------\n");
 
 
         printf("\nCalcul de solution par l'algo d'approximation.. \n\n");
@@ -185,12 +204,12 @@ int main (int argc, char* argv[]){
         printf("Complexité : ?? ; Temps d'execution : %f secondes\n\n", 
                         ((float)my_clock)/CLOCKS_PER_SEC);
 
+	*/     
 
         for(unsigned i = 0;i < n;i++){
                 free(couts[i]);
                 free(points[i]);
         }//for
-         
         free(couts);
         free(points);
         free(tmp);

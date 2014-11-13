@@ -1,5 +1,6 @@
 #include "generateur_connexe.h"
 
+/*génère un double dans l'interv ]0;1[ si bornes = false, [0;1] sinon*/
 double double_rand(int bornes)
 {
   double res =  ((double)rand()/(double)(RAND_MAX));
@@ -11,6 +12,7 @@ double double_rand(int bornes)
   return res;
 }
 
+/*affiche le tableau de structures: la composante du chaque sommet et son sommet suivant*/
 void affiche_connect(connect* m, int n){
 for(int i = 0;i < n;i++){
    printf("%d %d %d ", i, m[i].comp, m[i].next);
@@ -19,29 +21,18 @@ for(int i = 0;i < n;i++){
 
 }
 
-
+/*changer la composante pour ind+1 et sa suite en composante de ind*/
 void changer_comp(connect* tab, int ind){
   int i = ind+1;
-  //affiche_connect(tab,n);
-  //printf("//// %d %d \n", i,tab[i].comp);
-
+ 
   while(tab[i].next!=ind+1){
     tab[i].comp = tab[ind].comp;
     i = tab[i].next;
-
-    // printf("itération %d nombre de composants %d\n\n",i,cmp);
-    //printf("+ %d %d %d\n", i,tab[i].comp,tab[i].next );
-    //affiche_connect(tab,n);
-    //fflush(stdout);
-    //printf("+\n");
-    
-    //    char k;
-    //scanf("%c", &k);
- 
   }
     tab[i].comp = tab[ind].comp;
 }
 
+/*pour mettre à jour le tableau des composantes*/
 void calcul_connect(connect* tab, int i, int j, int* cmp)
 {
 if(tab[i].next==i && tab[j].next==j)
@@ -57,6 +48,7 @@ if(tab[i].next==i && tab[j].next==j)
         {
          int libre = (tab[i].next==i)? i:j;
          int lie = (tab[i].next==i)? j:i;
+
 
          int l = tab[lie].next;
          tab[lie].next=libre;
@@ -86,19 +78,20 @@ if(tab[i].next==i && tab[j].next==j)
 void graphe_connexe(double** couts, double** points, int n, double p)
 {
     int cmp = n;
-
+    
+/*tableau utile pour calculer les composantes connexes du graphe*/
 connect* tab = (connect*) malloc(n*sizeof(connect));
 
 
-	//printf ("p = %f\n\n",p);
+//printf ("p = %f\n\n",p);
 
+/*génération des points*/
  for(int i = 0;i < n;i++)
    for(int j = 0;j < 2;j++)
       points[i][j] = double_rand(1);
 
 
-
-
+ /* au début de parcours il n'y a pas d'aretes, donc n composantes*/
 for(int i=0; i<n; i++)
 {
     tab[i].comp = i;
@@ -108,57 +101,37 @@ for(int i=0; i<n; i++)
 cmp=n;
 
 for(int i = 0;i < n;i++){
-
    for(int j = i+1;j < n;j++){
-     double p2 = double_rand(0);
+     
+     double p2 = double_rand(0); /*probabilité pour que le sommet appartient au graphe*/
 
-     if(cmp>1 && p2<p)
+     /*on remplit la matrice des couts et en meme temps on calcule la connectivité*/
+     if(cmp>1 && p2<p) /*s'il y une arrete connectivité peut changer*/
         calcul_connect(tab, i, j, &cmp);
 
-     couts[i][j] = (p2<p)?sqrt(pow(points[j][2]-points[i][2],2)+pow(points[j][1]-points[i][1],2)):(-1);
-     couts[j][i] = couts[i][j];
+     couts[i][j] = (p2<p)?sqrt(pow(points[j][2]-points[i][2],2)+pow(points[j][1]-points[i][1],2)):(-1);/*si proba est plus petit on a cette arrete, sinon pas atteint -> -1 (une sorte d'infinité)*/
+     couts[j][i] = couts[i][j];/*car graphe non-orienté*/
      }
      couts[i][i] = 0;
 }
 
- 
-
-/* for(int i = 0;i < n;i++){ for(int j = 0;j < n;j++)
-     printf("%0.3f ", couts[i][j]);
-    printf("\n");
-  }
-*/
-
 
  int i = 0;
 
- /*printf("itération %d nombre de composants %d\n\n",i,cmp);
-    affiche_connect(tab,n);
-fflush(stdout);*/
+ /*si le graphe obtenu n'est pas connexe*/
 
  while(cmp!=1){
-
-   while(i<n-1){
-     if(tab[i].comp!=tab[i+1].comp){
-       //  printf("ololo %d %d ; %d %d ****\n",i,tab[i].comp,i+1, tab[i+1].comp);
-       changer_comp(tab,i);
+   while(i<n-1){ 
+     if(tab[i].comp!=tab[i+1].comp){ /*si les composantes de 2 sommets voisins sont differentes, on les relie forcement*/
+       changer_comp(tab, i);
        couts[i][i+1] = sqrt(pow(points[i+1][2]-points[i+1][2],2)+pow(points[i+1][1]-points[i][1],2));
-     couts[i+1][i] = couts[i][i+1];
-
+       couts[i+1][i] = couts[i][i+1];
        cmp--;
-       /*      printf(" i nombre de composants %d %d\n\n",i,cmp);
-affiche_connect(tab,n);
-fflush(stdout);*/
-
-     }
+       }
      i++;
    }
-
-
-
  }
 	
-
 
  free(tab);
 }

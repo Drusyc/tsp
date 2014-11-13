@@ -5,15 +5,32 @@
 #include <math.h>
 
 int g(int it){
-	return it^2;
+	return 1/it;
+}
+
+void transform1(int * m, int n){
+	int* t = malloc(n*sizeof(int));
+	for(int i = 0;i < n;i++) 
+		t[i] = m[i];
+
+	int j = 0;
+
+	for(int i = 0;i < n;i++){
+		m[i] = j;
+		j = t[j];
+	}
+
+
+	free(t);
 }
 
 void sortirMinLocaux(double** G, int* res, double* cout, int n){
 
+	transform1(res,n);
 	int ameliore = 1;
 	int temp = 0;
 	srand(time(NULL));
-	double p = rand()%1;
+	double p = (double)rand()/(double)(RAND_MAX/1.0);
 	int it=0;
 	while(ameliore){
 		ameliore = 0;
@@ -28,36 +45,19 @@ void sortirMinLocaux(double** G, int* res, double* cout, int n){
 				res[j]=temp;
 				ameliore = 1;
 			}else{
-				//Recuit-simulé
-				if (p<exp(-(G[res[0]][res[j]] + G[res[1]][res[j+1]] - G[res[0]][res[1]] - G[res[j]][res[j+1]])/g(it))){
-					//Echange
-					temp = res[1];
-					res[1]=res[j];
-					res[j]=temp;
-					ameliore = 1;
+				if (G[res[0]][res[1]] + G[res[j]][res[j+1]] != G[res[0]][res[j]] + G[res[1]][res[j+1]]){
+					//Recuit-simulé
+					if (p<exp(-(G[res[0]][res[j]] + G[res[1]][res[j+1]] - G[res[0]][res[1]] - G[res[j]][res[j+1]])/g(it))){
+						//Echange
+						temp = res[1];
+						res[1]=res[j];
+						res[j]=temp;
+						ameliore = 1;
+					}
 				}
 			}
 		}
 
-		//Cas i=n-1
-		for(int j=1; j<(n-2); ++j){
-			if(G[res[n-1]][res[0]] + G[res[j]][res[j+1]] > G[res[n-1]][res[j]] + G[res[0]][res[j+1]]){
-				//Echange
-				temp = res[0];
-				res[0]=res[j];
-				res[j]=temp;
-				ameliore = 1;
-			}else{
-				//Recuit-simulé
-				if (p<exp(-(G[res[n-1]][res[j]] + G[res[0]][res[j+1]] - G[res[n-1]][res[0]] - G[res[j]][res[j+1]])/g(it))){
-					//Echange
-					temp = res[0];
-					res[0]=res[j];
-					res[j]=temp;
-					ameliore = 1;
-				}
-			}
-		}
 
 		//Cas général
 		for(int i=1; i<(n-1); ++i){
@@ -73,35 +73,63 @@ void sortirMinLocaux(double** G, int* res, double* cout, int n){
 							res[n-1]=temp;
 							ameliore = 1;
 						}else{
-							//Recuit-simulé
-							if (p<exp(-(G[res[i]][res[n-1]] + G[res[i+1]][res[0]] - G[res[i]][res[i+1]] - G[res[n-1]][res[0]])/g(it))){
-								//Echange
-								temp = res[i+1];
-								res[i+1]=res[j];
-								res[j]=temp;
-								ameliore = 1;
+							if(G[res[i]][res[i+1]] + G[res[n-1]][res[0]] != G[res[i]][res[n-1]] + G[res[i+1]][res[0]]){
+								//Recuit-simulé
+								if (p<exp(-(G[res[i]][res[n-1]] + G[res[i+1]][res[0]] - G[res[i]][res[i+1]] - G[res[n-1]][res[0]])/g(it))){
+									//Echange
+									temp = res[i+1];
+									res[i+1]=res[j];
+									res[j]=temp;
+									ameliore = 1;
+								}
 							}
 						}
-					}
-					if(G[res[i]][res[i+1]] + G[res[j]][res[j+1]] > G[res[i]][res[j]] + G[res[i+1]][res[j+1]]){
-						//Echange
-						temp = res[i+1];
-						res[i+1]=res[j];
-						res[j]=temp;
-						ameliore = 1;
 					}else{
-						//Recuit-simulé
-						if (p<exp(-(G[res[i]][res[j]] + G[res[i+1]][res[j+1]] - G[res[i]][res[i+1]] - G[res[j]][res[j+1]])/g(it))){
+						if(G[res[i]][res[i+1]] + G[res[j]][res[j+1]] > G[res[i]][res[j]] + G[res[i+1]][res[j+1]]){
 							//Echange
 							temp = res[i+1];
 							res[i+1]=res[j];
 							res[j]=temp;
 							ameliore = 1;
+						}else{
+							if(G[res[i]][res[i+1]] + G[res[j]][res[j+1]] != G[res[i]][res[j]] + G[res[i+1]][res[j+1]]){
+								//Recuit-simulé
+								if (p<exp(-(G[res[i]][res[j]] + G[res[i+1]][res[j+1]] - G[res[i]][res[i+1]] - G[res[j]][res[j+1]])/g(it))){
+									//Echange
+									temp = res[i+1];
+									res[i+1]=res[j];
+									res[j]=temp;
+									ameliore = 1;
+								}
+							}
 						}
 					}
 				}
 			}
 		}
+
+		//Cas i=n-1
+		for(int j=1; j<(n-2); ++j){
+			if(G[res[n-1]][res[0]] + G[res[j]][res[j+1]] > G[res[n-1]][res[j]] + G[res[0]][res[j+1]]){
+				//Echange
+				temp = res[0];
+				res[0]=res[j];
+				res[j]=temp;
+				ameliore = 1;
+			}else{
+				if(G[res[n-1]][res[0]] + G[res[j]][res[j+1]] != G[res[n-1]][res[j]] + G[res[0]][res[j+1]]){
+					//Recuit-simulé
+					if (p<exp(-(G[res[n-1]][res[j]] + G[res[0]][res[j+1]] - G[res[n-1]][res[0]] - G[res[j]][res[j+1]])/g(it))){
+						//Echange
+						temp = res[0];
+						res[0]=res[j];
+						res[j]=temp;
+						ameliore = 1;
+					}
+				}
+			}
+		}
+
 	}
 
 	//Calcul du nouveau coût
@@ -112,3 +140,4 @@ void sortirMinLocaux(double** G, int* res, double* cout, int n){
 	//On "ferme" le cycle
 	cout[0] = cout[0] + G[res[n-1]][res[0]];
 }
+
