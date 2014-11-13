@@ -1,6 +1,7 @@
 #include "glouton.h"
 #include <float.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 
 /*on retourne le cout total et on remplie le tableau res qui décrit l'ordre de parcoiurs*/
@@ -33,9 +34,12 @@ double glouton (double ** G, int * res, int n){
 
  }
 
+
+ 
+  
   res[p] = 0;
   c+= G[0][p];
-
+ 
   return c;
 
 }
