@@ -106,6 +106,19 @@ bool is_seen (int * tab, int a, int size) {
         return false;
 }//
 
+bool all_seen (int n) {
+        bool seen;
+        for (uint8_t i = 0; i < n; i++) {
+                seen = false;
+                seen = is_seen(node_seen,i, n);
+                if (seen == false) {
+                        return false;
+                }//fi
+        }//for()
+        return true;
+}//all_seen()
+
+
 void set_abr_pmin (struct arc * aretes, unsigned size_arc,  double ** mat, int n) {
 
         for (int i = 0; i < n; i++) {
@@ -136,10 +149,6 @@ void recur_find_eul (double ** mat, struct arc * arc, int n, int node) {
 
         for (int i = 0; i < n; i++) {         
                 
-                if(i == 0 && made[node][i] != 0 && ) {
-
-                }//fi
-
                 if (mat[node][i] != 0 && !is_seen(node_seen,i,n)) {
                         printf("for :%i -> %i\n", node, i);
 
@@ -157,11 +166,22 @@ void recur_find_eul (double ** mat, struct arc * arc, int n, int node) {
                 }//fi
         }//for
 
+        if (node == 0) 
+                return;
+
         int i = 0;
-        while (mat[node][i] == 0 && i<n) i++;
+        while (i<n && mat[node][i] == 0 ) i++;
+                
+        if(i == 0 && mat[node][i] != 0 && all_seen(n)) {
+                //printf("while: %i -> %i\n", node, i);
+                arc[ak].p1 = node;
+                arc[ak].p2 = i;
+                arc[ak].cout = couts[node][i];
+                return;
+        }//fi
 
         if (i<n) {
-                printf("while: %i -> %i\n", node, i);
+                //printf("while: %i -> %i\n", node, i);
                 arc[ak].p1 = node;
                 arc[ak].p2 = i;
                 arc[ak].cout = couts[node][i];
@@ -178,9 +198,42 @@ void recur_find_eul (double ** mat, struct arc * arc, int n, int node) {
 }//recur_find_eul()
 
 
+void crea_hamil (struct arc * arc, uint32_t size_arc,  int * res, int n) {
+
+
+        ak = 0;
+        nseen_i = 1;
+        uint32_t i = 0;
+        while (i < size_arc) {
+
+                if (!is_seen(node_seen,arc[i].p2,n)) {
+                        printf("for: -> %i\n", i);
+                        res[ak++] = arc[i].p2;
+                        node_seen[nseen_i++] = arc[i].p2;
+                        
+                } else if (i == (size_arc - 1)) {
+                        res[ak] = 0;
+                        return;                        
+                } else {
+                        while(i < size_arc && is_seen(node_seen,arc[i].p2,n)) i++;
+                        if (i == (size_arc - 1)) {
+                                res[ak] = 0;
+                                return; 
+                        }//fi
+                        printf("while: -> %i\n", i);
+
+                        res[ak++] = arc[i].p2;
+                        node_seen[nseen_i++] = arc[i].p2;
+                }//fi
+                i++;
+        }//while
+
+        return;
+}//crea_hamil()
+
 void algo_approx (int n) {
         
-        const uint32_t nb_arc = n*(n-1);
+        uint32_t nb_arc = n*(n-1);
         struct arc * aretes = malloc((nb_arc) * sizeof(struct arc));
 
         create_tab_arc(aretes);
@@ -207,26 +260,50 @@ void algo_approx (int n) {
 
         affiche2D(mat_mabr,n);
 
-        /* INIT RECUR */
+        /***** INIT RECUR ******/
 
         for (int i = 0; i < n; i++) {
                 node_seen[i] = -1;
         }//for()
         node_seen[0] = 0;
 
-        aretes = realloc(aretes,(2 * n) * sizeof(struct arc));
+
+
+        nb_arc = 2*(n-1);
+        aretes = realloc(aretes,nb_arc * sizeof(struct arc));
         ak = 0; //indice pour aretes..
         nseen_i = 1; //indice pour node_seen..
 
         recur_find_eul(mat_mabr, aretes, n, 0);
 
-        printf_tab_arc(aretes, 2*n);
+        printf_tab_arc(aretes, nb_arc);
+
+
+
+        /**** CREATION HAMILTONIEN *****/
+        
+        int *res = malloc (n * sizeof(int));
+
+        for (int i = 0; i < n; i++) {
+                res[i] = -1;
+                node_seen[i] = -1;
+        }//for()
+        res[0]=0;
+        node_seen[0] = 0;
+
+        crea_hamil (aretes, nb_arc, res, n);
+
+        printf("\n\n");
+        for(int i = 0; i < n; i++) {
+                printf("%i->",res[i]);
+        }//for()
 
         /************ FREE ************/
         for(int i = 0;i < n;i++){
                 free(mat_mabr[i]);
         }//for
 
+        free(res);
         free(aretes);
         free(mat_mabr);
         free(node_seen);
