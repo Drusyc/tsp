@@ -188,12 +188,12 @@ int main (int argc, char* argv[]){
         printf("Complexité : ?? ; Temps d'execution : %f secondes\n\n", 
                         ((float)my_clock)/CLOCKS_PER_SEC);
 
+	*/     
 
         for(unsigned i = 0;i < n;i++){
                 free(couts[i]);
                 free(points[i]);
         }//for
-	*/     
         free(couts);
         free(points);
         free(tmp);
