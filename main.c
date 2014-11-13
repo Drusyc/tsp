@@ -22,18 +22,21 @@ void affiche2D(double ** m, int n){
 }
 
 void affiche1D(int * m, int n){
-  for(int i = 0;i < n;i++) 
-     printf("%d ", m[i]);
+  for(int i = 0;i < n-1;i++) 
+     printf("%d->", m[i]);
   
-  printf("\n");
+  printf("%d \n", m[n-1]);
   
 }
 
-void affiche1D2(int * m, int n){
-  for(int i = 0;i < n;i++) 
-     printf("%d ", m[i]);
+void affiche1D2(int * m){
   
-  printf("\n");
+  int i = 0; 
+  while(m[i]!=0){
+    printf("%d->", i);
+    i = m[i];
+  }
+  printf("%d \n", i);
   
 }
 
@@ -105,7 +108,7 @@ int main (int argc, char* argv[]){
         my_clock = clock() - my_clock;
 
         printf("Solution : ");
-        affiche1D(res_chemin ,n);
+        affiche1D2(res_chemin);
         printf("Coût : %0.2f \n", res_cout);
 
         printf("Complexité : O(n²) ; Temps d'execution : %f secondes\n\n", 
@@ -172,13 +175,15 @@ int main (int argc, char* argv[]){
 
 	if (n<14) {
 		printf("\nCalcul de solution par l'algo de branch & bound.. \n\n");
-
+		 for(unsigned i = 0;i < n;i++)
+		   res_chemin[i] = -1;
+	
 		my_clock = clock();
 		res_cout = bb(couts, res_chemin, n);
 		my_clock = clock() - my_clock;
 
 		printf("Solution optimale : ");
-		affiche1D(res_chemin ,n);
+		affiche1D2(res_chemin);
 		printf("Coût : %0.2f \n", res_cout);
 
 		printf("Complexité : n^2*c^n ; Temps d'execution : %f secondes\n\n", 
