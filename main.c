@@ -84,9 +84,9 @@ int main (int argc, char* argv[]){
         affiche2D(couts,n);
 
 
-        printf("\n\n--------------- ALGO ENUMERATION (n<10) ---------------\n");
+        printf("\n\n--------------- ALGO ENUMERATION (n<11) ---------------\n");
 
-	if (n<10) {
+	if (n<11) {
 		my_clock = clock();
 		printf("\nCalcul des solutions possibles données par l'algo d'enumeration.. \n\n");
 		enumeration(n, couts);
@@ -168,9 +168,9 @@ int main (int argc, char* argv[]){
 
 	}//fi
 
-        printf("\n\n--------------- ALGO BRANCH & BOUND (n<13) ---------------\n");
+        printf("\n\n--------------- ALGO BRANCH & BOUND (n<14) ---------------\n");
 
-	if (n<13) {
+	if (n<14) {
 		printf("\nCalcul de solution par l'algo de branch & bound.. \n\n");
 
 		my_clock = clock();
