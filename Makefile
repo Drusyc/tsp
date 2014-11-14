@@ -4,7 +4,7 @@ LDFLAGS= -lm
 EXEC=tsp
 #SRC=$(wildcard *.c)
 SRC=dynamique.c FloydWarshall.c main.c sortirMinLocaux.c bb.c enum.c \
-    generateur_connexe.c glouton.c RechercheLocale.c
+    generateur_connexe.c glouton.c RechercheLocale.c approx.c
 OBJ=$(SRC:.c=.o)
 
 

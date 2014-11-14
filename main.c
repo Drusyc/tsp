@@ -190,21 +190,23 @@ int main (int argc, char* argv[]){
 				((float)my_clock)/CLOCKS_PER_SEC);
 	}//fi
 	
-	/*        printf("\n\n--------------- ALGO D'APPROXIMATION ---------------\n");
+	printf("\n\n--------------- ALGO D'APPROXIMATION ---------------\n");
 
 
         printf("\nCalcul de solution par l'algo d'approximation.. \n\n");
 
         my_clock = clock();
+	algo_approx(couts, res_chemin, &res_cout, n);
         my_clock = clock() - my_clock;
 
-        printf("Solution optimale : .. ");
-        printf("Coût : .. \n" );
+        printf("Solution approximative: ");
+	affiche1D(res_chemin,n);
+        printf("Coût : %0.2f\n", res_cout);
 
         printf("Complexité : ?? ; Temps d'execution : %f secondes\n\n", 
                         ((float)my_clock)/CLOCKS_PER_SEC);
 
-	*/     
+	     
 
         for(unsigned i = 0;i < n;i++){
                 free(couts[i]);

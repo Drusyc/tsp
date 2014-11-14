@@ -11,7 +11,9 @@ struct arc {
 
 
 
-void algo_approx (int n);
+//void algo_approx (int n);
+
+void algo_approx (double ** mat, int * res, double * res_cout, int n);
 
 
 

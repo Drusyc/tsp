@@ -9,21 +9,25 @@
 #include "generateur_connexe.h" 
 #include "FloydWarshall.h"
 
-const int n = 5;
+//const int n = 4;
 
-/*double couts[5][5] = 	{{0, 1, 2, 2, 5}, 
+double **couts;
+
+/*
+double couts[5][5] = 	{{0, 1, 2, 2, 5}, 
 			 {1, 0, 1, 2, 2}, 
 			 {2, 1, 0, 9, 2}, 
 			 {2, 2, 9, 0, 5}, 
-			 {5, 2, 2, 5, 0}};*/
-
-double couts[5][5] = 	{{0,1, 4, 5,1 }, 
-			 {1, 0,1 ,5 ,4 }, 
-			 {4,1 , 0,2 ,8 }, 
-			 {5, 5, 2, 0,1 }, 
+			 {5, 2, 2, 5, 0}};
+double couts[5][5] = 	{{0, 1, 4, 5, 1}, 
+			 {1, 0, 1, 5, 4}, 
+			 {4, 1, 0, 2, 8}, 
+			 {5, 5, 2, 0, 1}, 
 			 {1, 4, 8, 1, 0}};
+*/
+
 /*
-double couts[4][4] = 	{{0, 1, 2, 5}, 
+double couts[4][4] = 	{{0, 1, 2, 5},
 			 {1, 0, 1, 2}, 
 			 {2, 1, 0, 3}, 
 			 {5, 2, 3, 0}};
@@ -45,13 +49,13 @@ void sort(struct arc * ar, int l, int h){
         {
                 while (ar[i].cout < m.cout) i++;     
                 while (ar[j].cout > m.cout) j--;     
-                        if (i<=j){
-                                wsp=ar[i];
-                                ar[i]=ar[j];
-                                ar[j]=wsp;
-                                i++;
-                                j--;
-                        }//fi
+		if (i<=j){
+			wsp=ar[i];
+			ar[i]=ar[j];
+			ar[j]=wsp;
+			i++;
+			j--;
+		}//fi
         } while (i <= j);
 
         if (i<h) sort(ar, i, h);
@@ -63,7 +67,7 @@ void my_qsort(struct arc* ar, int n){
         sort(ar, 0, n-1);
 }//qsort
 
-void affiche2D(double ** m, int n){
+void printf_tab(double ** m, int n){
         printf("\n\n");
         for(int i = 0;i < n;i++){ 
                 for(int j = 0;j < n;j++)
@@ -71,7 +75,7 @@ void affiche2D(double ** m, int n){
                 printf("\n");
         }//for
         printf("\n\n");
-}//affiche2D
+}//printf_tab
 
 void printf_tab_arc (struct arc* aretes, uint32_t size) {
         for (uint32_t i = 0; i < size; i++) {
@@ -82,7 +86,7 @@ void printf_tab_arc (struct arc* aretes, uint32_t size) {
 
 }//printf_tab_arc()
 
-void create_tab_arc (struct arc* aretes) {
+void create_tab_arc (struct arc* aretes, int n) {
         struct arc * to_add = malloc(sizeof(struct arc));
         uint32_t k = 0;
         for (int i = 0; i < n; i++) {
@@ -98,7 +102,7 @@ void create_tab_arc (struct arc* aretes) {
         free(to_add);
 }//create_tab_arc()
 
-bool is_seen (int * tab, int a, int size) {
+bool approx_is_seen (int * tab, int a, int size) {
         
         for (int i = 0; i < size; i++) {
              if (tab[i] == a) {
@@ -108,11 +112,11 @@ bool is_seen (int * tab, int a, int size) {
         return false;
 }//
 
-bool all_seen (int n) {
+bool approx_all_seen (int n) {
         bool seen;
         for (uint8_t i = 0; i < n; i++) {
                 seen = false;
-                seen = is_seen(node_seen,i, n);
+                seen = approx_is_seen(node_seen,i, n);
                 if (seen == false) {
                         return false;
                 }//fi
@@ -137,8 +141,8 @@ void set_abr_pmin (struct arc * aretes, unsigned size_arc,  double ** mat, int n
 	  // for(unsigned i = 0; i < size_arc; i++) {
 	  while(i<size_arc && k!=n){
 	    // printf("**%d\n", k);
-                is_p1 = is_seen(node_seen,aretes[i].p1,n);
-                is_p2 = is_seen(node_seen,aretes[i].p2,n);
+                is_p1 = approx_is_seen(node_seen,aretes[i].p1,n);
+                is_p2 = approx_is_seen(node_seen,aretes[i].p2,n);
                 if ((!is_p1 || !is_p2) &&(!(!is_p1 && !is_p2) || k==0)) {
                         if (!is_p1) {
                                 node_seen[k++] = aretes[i].p1;
@@ -160,8 +164,8 @@ void recur_find_eul (double ** mat, struct arc * arc, int n, int node) {
 
         for (int i = 0; i < n; i++) {         
                 
-                if (mat[node][i] != 0 && !is_seen(node_seen,i,n)) {
-                        printf("for :%i -> %i\n", node, i);
+                if (mat[node][i] != 0 && !approx_is_seen(node_seen,i,n)) {
+                        //printf("for :%i -> %i\n", node, i);
 
                         arc[ak].p1 = node;
                         arc[ak].p2 = i;
@@ -183,7 +187,7 @@ void recur_find_eul (double ** mat, struct arc * arc, int n, int node) {
         int i = 0;
         while (i<n && mat[node][i] == 0 ) i++;
                 
-        if(i == 0 && mat[node][i] != 0 && all_seen(n)) {
+        if(i == 0 && mat[node][i] != 0 && approx_all_seen(n)) {
                 //printf("while: %i -> %i\n", node, i);
                 arc[ak].p1 = node;
                 arc[ak].p2 = i;
@@ -209,32 +213,40 @@ void recur_find_eul (double ** mat, struct arc * arc, int n, int node) {
 }//recur_find_eul()
 
 
-void crea_hamil (struct arc * arc, uint32_t size_arc,  int * res, int n) {
-
+void crea_hamil (struct arc * arc, uint32_t size_arc,  int * res, double * res_cout, int n) {
 
         ak = 0;
         nseen_i = 1;
         uint32_t i = 0;
         while (i < size_arc) {
 
-                if (!is_seen(node_seen,arc[i].p2,n)) {
-                        printf("for: -> %i\n", i);
+                if (!approx_is_seen(node_seen,arc[i].p2,n)) {
+                        //printf("for: -> %i\n", i);
                         res[ak++] = arc[i].p2;
-                        node_seen[nseen_i++] = arc[i].p2;
+                        node_seen[nseen_i] = arc[i].p2;
+
+			//printf("**for: %i->%i\n", node_seen[nseen_i -1], node_seen[nseen_i]);
+			//printf("**cout: %f\n", couts[node_seen[nseen_i -1]][node_seen[nseen_i]]);
+			(*res_cout) += couts[node_seen[nseen_i - 1]][node_seen[nseen_i]];
+			nseen_i++;
                         
-                } else if (i == (size_arc - 1)) {
+                } else if (i >= (size_arc - 1)) {
                         res[ak] = 0;
                         return;                        
                 } else {
-                        while(i < size_arc && is_seen(node_seen,arc[i].p2,n)) i++;
-                        if (i == (size_arc - 1)) {
+                        while(i < size_arc && approx_is_seen(node_seen,arc[i].p2,n)) i++;
+                        if (i >= (size_arc)) {
                                 res[ak] = 0;
                                 return; 
                         }//fi
-                        printf("while: -> %i\n", i);
+                        //printf("while: -> %i\n", i);
 
+	
                         res[ak++] = arc[i].p2;
-                        node_seen[nseen_i++] = arc[i].p2;
+                        node_seen[nseen_i] = arc[i].p2;
+			
+			(*res_cout) += couts[node_seen[nseen_i - 1]][node_seen[nseen_i]];
+			nseen_i++;
                 }//fi
                 i++;
         }//while
@@ -242,18 +254,22 @@ void crea_hamil (struct arc * arc, uint32_t size_arc,  int * res, int n) {
         return;
 }//crea_hamil()
 
-void algo_approx (int n) {
+void algo_approx (double ** graph, int * res, double * res_cout, int n) {
+//void algo_approx (int n) {
         
         uint32_t nb_arc = n*(n-1);
         struct arc * aretes = malloc((nb_arc) * sizeof(struct arc));
 
-        create_tab_arc(aretes);
-        printf_tab_arc(aretes, nb_arc);
+	couts = graph;
+	(*res_cout) = 0;
+
+        create_tab_arc(aretes, n);
+        //printf_tab_arc(aretes, nb_arc);
 
         my_qsort(aretes, nb_arc);
 
-        printf("\n\nApres sort\n\n");
-        printf_tab_arc(aretes,nb_arc);
+        //printf("\n\nApres sort\n\n");
+        //printf_tab_arc(aretes,nb_arc);
 
         double ** mat_mabr  = (double **)malloc( n * sizeof(double*));
         for(int i = 0;i < n;i++){
@@ -269,7 +285,7 @@ void algo_approx (int n) {
         node_seen = malloc (n * sizeof(int));
         set_abr_pmin (aretes, nb_arc, mat_mabr, n);
 
-        affiche2D(mat_mabr,n);
+        //printf_tab(mat_mabr,n);
 
         /***** INIT RECUR ******/
 
@@ -287,14 +303,14 @@ void algo_approx (int n) {
 
         recur_find_eul(mat_mabr, aretes, n, 0);
 
-        printf_tab_arc(aretes, nb_arc);
+        //printf_tab_arc(aretes, nb_arc);
 
 
 
         /**** CREATION HAMILTONIEN *****/
-        
-        int *res = malloc (n * sizeof(int));
 
+	//int * res = malloc (n * sizeof(int));
+        
         for (int i = 0; i < n; i++) {
                 res[i] = -1;
                 node_seen[i] = -1;
@@ -302,28 +318,33 @@ void algo_approx (int n) {
         res[0]=0;
         node_seen[0] = 0;
 
-        crea_hamil (aretes, nb_arc, res, n);
+        crea_hamil (aretes, nb_arc, res, res_cout, n);
 
-        printf("\n\n");
+	(*res_cout) += couts[node_seen[n - 1]][0];
+        //printf("\n\n");
+	/*
         for(int i = 0; i < (n-1); i++) {
                 printf("%i->",res[i]);
         }//for()
         printf("0\n");
+	*/
 
         /************ FREE ************/
         for(int i = 0;i < n;i++){
                 free(mat_mabr[i]);
         }//for
 
-        free(res);
+	
+//	free(res);
         free(aretes);
         free(mat_mabr);
         free(node_seen);
         return ;
 }//for
-
+/*
 int main () {
         
         algo_approx(n);
         return 1;
 }//main();
+*/
