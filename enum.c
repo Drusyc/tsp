@@ -108,44 +108,9 @@ void enumeration (unsigned n, double ** graph) {
 	nb_solutions = 0;
         tsp_enum(graph, n, 0);
 
-        //printf("Solutions écrites dans enum.txt (%7.0f solutions)\n", nb_solutions);
+        printf("Solutions écrites dans enum.txt (%7.0f solutions)\n", nb_solutions);
         fclose(pFile);
         free(node_seen);
         return;
 }//enumeration()
 
-/*
-int main () {
-
-        //Graphe généré sous la forme d'un matrice d'adjacence n*n
-
-        uint8_t n = 5;
-
-        double ** points = (double **) malloc (n*sizeof(double *));
-        double ** couts  = (double **) malloc (n*sizeof(double*)) ;
-        node_seen = malloc(n*sizeof(uint32_t));
-
-        double p = double_rand(1);
-
-        for (uint8_t i = 0; i < n; i++) {
-                couts [i] = malloc(n*sizeof(double));
-                points[i] = malloc(2*sizeof(double));
-                node_seen[i] = 0;
-        }//for
-
-        srand(time(NULL));
-        graphe_connexe(couts,points,n,p);
-       
-        floydWarshall(couts,n);
-        //node_seen contient un tour hamiltonien de taille nb_node 
-        //forcement, pour visiter chaque noeuds
-        //on part du sommet 1
-        k = 0;
-        tsp_enum(couts, n, 0);
-
-        free(points);
-        free(couts);
-        free(node_seen);
-        return 0;
-}//main()
-*/

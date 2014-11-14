@@ -1,4 +1,0 @@
-tsp
-===
-
-mini-projet algo

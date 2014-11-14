@@ -9,10 +9,10 @@
 #include "generateur_connexe.h" 
 #include "FloydWarshall.h"
 
-//const int n = 4;
 
 double **couts;
 
+//const int n = 4;
 /*
 double couts[5][5] = 	{{0, 1, 2, 2, 5}, 
 			 {1, 0, 1, 2, 2}, 
@@ -34,8 +34,12 @@ double couts[4][4] = 	{{0, 1, 2, 5},
 */
 
 int * node_seen;
-int ak;
-int nseen_i;
+int ak; /* indice pour tableau aretes */
+int nseen_i; /* indice pour tableau node_seen */
+
+/*
+ * Algo de sort pour le QuickSort
+ */
 
 void sort(struct arc * ar, int l, int h){
         int i, j;
@@ -62,11 +66,17 @@ void sort(struct arc * ar, int l, int h){
         if (l<j) sort(ar, l, j);
 }//sort
  
+/*
+ * Algo d'initialisation pour le Qsort
+ */
 void my_qsort(struct arc* ar, int n){
         srand (time(NULL));
         sort(ar, 0, n-1);
 }//qsort
 
+/* 
+ * Affiche un tableau en 2D de taille nxn
+ */
 void printf_tab(double ** m, int n){
         printf("\n\n");
         for(int i = 0;i < n;i++){ 
@@ -77,6 +87,10 @@ void printf_tab(double ** m, int n){
         printf("\n\n");
 }//printf_tab
 
+
+/*
+ * Affiche un tableau d'arc de taille size
+ */
 void printf_tab_arc (struct arc* aretes, uint32_t size) {
         for (uint32_t i = 0; i < size; i++) {
                 printf("aretes[%i] : %i->%i : %f\n",i,aretes[i].p1,
@@ -86,6 +100,10 @@ void printf_tab_arc (struct arc* aretes, uint32_t size) {
 
 }//printf_tab_arc()
 
+/*
+ * Algo de création d'un tableau d'arc selon la matrice de coût du graphe complet 
+ * Crée un tableau d'arc et met les arcs les uns après les autres 
+ */
 void create_tab_arc (struct arc* aretes, int n) {
         struct arc * to_add = malloc(sizeof(struct arc));
         uint32_t k = 0;
@@ -102,6 +120,9 @@ void create_tab_arc (struct arc* aretes, int n) {
         free(to_add);
 }//create_tab_arc()
 
+/*
+ * Renvoie true sur l'élément "a" est présent dans le tableau tab de taille size
+ */
 bool approx_is_seen (int * tab, int a, int size) {
         
         for (int i = 0; i < size; i++) {
@@ -112,6 +133,9 @@ bool approx_is_seen (int * tab, int a, int size) {
         return false;
 }//
 
+/*
+ * Renvoie true si tous les éléments [0..n-1] sont dans le tableau node_seen
+ */
 bool approx_all_seen (int n) {
         bool seen;
         for (uint8_t i = 0; i < n; i++) {
@@ -124,6 +148,10 @@ bool approx_all_seen (int n) {
         return true;
 }//all_seen()
 
+/*
+ * Algo de calcul de l'arbre couvrant de poid minimum selon un tableau d'arc trié
+ * Le tableau finale sera l'argument aretes de taille size_arc
+ */
 
 void set_abr_pmin (struct arc * aretes, unsigned size_arc,  double ** mat, int n) {
 
@@ -148,6 +176,8 @@ void set_abr_pmin (struct arc * aretes, unsigned size_arc,  double ** mat, int n
                                 node_seen[k++] = aretes[i].p2;
                         }//fi
 
+                        /* 2 pour simuler le doublement des arêtes
+                         * nécessaire pour la suite de l'algo*/
                         mat[aretes[i].p1][aretes[i].p2] = 2;
                         mat[aretes[i].p2][aretes[i].p1] = 2;
 			i=0;    
@@ -156,7 +186,10 @@ void set_abr_pmin (struct arc * aretes, unsigned size_arc,  double ** mat, int n
         }//for
 }//set_abr_pmin()
 
-
+/*
+ * Algo récursif pour calculer un tour eulérien d'un arbre couvrant minimum 
+ * où tous les arcs ont été doublés
+ */
 void recur_find_eul (double ** mat, struct arc * arc, int n, int node) {
 
         for (int i = 0; i < n; i++) {         
@@ -209,7 +242,11 @@ void recur_find_eul (double ** mat, struct arc * arc, int n, int node) {
         return;
 }//recur_find_eul()
 
-
+/*
+ * Algo de création du chemin hamiltonien à partir du chemin eulérien précédement crée
+ * Renvoie la solution hamiltonienne dans res et le coût associé dans res_cout
+ *
+ */
 void crea_hamil (struct arc * arc, uint32_t size_arc,  int * res, double * res_cout, int n) {
 
         ak = 0;
@@ -251,8 +288,13 @@ void crea_hamil (struct arc * arc, uint32_t size_arc,  int * res, double * res_c
         return;
 }//crea_hamil()
 
+
+/*
+ * Fonction principale 
+ *
+ */
+
 void algo_approx (double ** graph, int * res, double * res_cout, int n) {
-//void algo_approx (int n) {
         
         uint32_t nb_arc = n*(n-1);
         struct arc * aretes = malloc((nb_arc) * sizeof(struct arc));
@@ -264,9 +306,6 @@ void algo_approx (double ** graph, int * res, double * res_cout, int n) {
         //printf_tab_arc(aretes, nb_arc);
 
         my_qsort(aretes, nb_arc);
-
-        //printf("\n\nApres sort\n\n");
-        //printf_tab_arc(aretes,nb_arc);
 
         double ** mat_mabr  = (double **)malloc( n * sizeof(double*));
         for(int i = 0;i < n;i++){
@@ -306,7 +345,6 @@ void algo_approx (double ** graph, int * res, double * res_cout, int n) {
 
         /**** CREATION HAMILTONIEN *****/
 
-	//int * res = malloc (n * sizeof(int));
         
         for (int i = 0; i < n; i++) {
                 res[i] = -1;

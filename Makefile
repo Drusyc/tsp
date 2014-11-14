@@ -19,14 +19,8 @@ approx: approx.o FloydWarshall.o generateur_connexe.o
 test: FloydWarshall.o generateur_connexe.o dynamique.o enum.o glouton.o bb.o gen_graph.o RechercheLocale.o approx.o sortirMinLocaux.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-dynamique: FloydWarshall.o generateur_connexe.o dynamique.o
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) 
-
-enum: FloydWarshall.o generateur_connexe.o enum.o
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) 
-
 %.o: %.c 
 	$(CC) $(CFLAGS) -o $@ -c $< $(LDFLAGS)
 
 clean:
-	@rm -rf *.o enum.txt
+	@rm -rf $(OBJ) $(EXEC) enum.txt
