@@ -136,11 +136,8 @@ void set_abr_pmin (struct arc * aretes, unsigned size_arc,  double ** mat, int n
 	
 	unsigned i=0;
 
-	
-	//	while(k!=(n))
-	  // for(unsigned i = 0; i < size_arc; i++) {
-	  while(i<size_arc && k!=n){
-	    // printf("**%d\n", k);
+        while(i<size_arc && k!=n){
+	        // printf("**%d\n", k);
                 is_p1 = approx_is_seen(node_seen,aretes[i].p1,n);
                 is_p2 = approx_is_seen(node_seen,aretes[i].p2,n);
                 if ((!is_p1 || !is_p2) &&(!(!is_p1 && !is_p2) || k==0)) {
@@ -155,7 +152,7 @@ void set_abr_pmin (struct arc * aretes, unsigned size_arc,  double ** mat, int n
                         mat[aretes[i].p2][aretes[i].p1] = 2;
 			i=0;    
                 }//fi
-		i++;	
+        	i++;	
         }//for
 }//set_abr_pmin()
 
@@ -334,17 +331,8 @@ void algo_approx (double ** graph, int * res, double * res_cout, int n) {
                 free(mat_mabr[i]);
         }//for
 
-	
-//	free(res);
         free(aretes);
         free(mat_mabr);
         free(node_seen);
         return ;
 }//for
-/*
-int main () {
-        
-        algo_approx(n);
-        return 1;
-}//main();
-*/
